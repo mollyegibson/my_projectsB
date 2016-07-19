@@ -79,6 +79,7 @@
 
 
 <center>
+    
 <script language="javascript" type="text/javascript">
 var day_of_week = new Array('Sun','Mon','Tue','Wed','Thu','Fri','Sat');
 var month_of_year = new Array('January','February','March','April','May','June','July','August','September','October','November','December');
@@ -151,7 +152,7 @@ if( Calendar.getDate() > index )
   week_day =Calendar.getDay();
 
   // START NEW ROW FOR FIRST DAY OF WEEK
-  if(week_day == 0)
+  if(week_day === 0)
   cal += TR_start;
 
   if(week_day != DAYS_OF_WEEK)
