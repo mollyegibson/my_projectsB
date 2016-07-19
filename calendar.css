@@ -1,0 +1,152 @@
+body{
+	margin: 0 auto;
+	padding: 20px;
+    font-size: 10pt;
+    font-weight: 100;
+    font-family: Century Gothic, Arial, sans-serif;
+	}
+/*for top section*/
+.logo {
+      text-align: center;
+      font-size: 12pt;
+	  padding: 14px 16px;
+	  padding-top: 20px;
+	  padding-right: 30px;
+      font-weight: 100;
+      font-family: Century Gothic, Arial, sans-serif;}
+ul {
+    list-style-type: none;
+    margin:0;
+    padding:0;
+	display:inline;
+}
+
+li {
+    float: left;
+    display: inline-block;
+    padding-top: 14px;
+    padding-left: 14px;
+    padding-right: 20px;
+    padding-bottom: 5px;
+    text-align: center;
+}
+
+li.right {
+    float: right;
+    padding-right: 20px;
+}
+
+.login {
+    border: 1px solid #808080;
+	background-color: white;
+    color: #808080;
+    padding: 10px 17px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+	-webkit-transition-duration: 0.4s; 
+    transition-duration: 0.4s;
+}
+
+.login:hover {
+	background-color:#808080;
+    color: white;
+}
+
+
+
+
+
+
+
+
+/*button for login and post*/
+a:link, a:visited {
+    background-color: #f44336;
+	opacity: 0.8;
+    color: white;
+    padding: 14px 14px;
+    text-align: center; 
+    text-decoration: none;
+    display: inline-block;
+}
+
+/*for search*/
+.style-1 input[type="text"]{
+  padding: 10px;
+  border: none;
+  border-bottom: solid 2px #c9c9c9;
+  transition: border 0.3s;
+}   
+.style-1 input[type="text"]:focus,
+.style-1 input[type="text"].focus {
+  border: none;
+  border-bottom: solid 2px #969696;
+}
+	  
+	  
+	  
+	  
+p {
+    font-size: 10pt;
+    font-weight: 100;
+    font-family: Century Gothic, Arial, sans-serif;
+	}	  
+	  
+	  
+i {
+	float: right;
+}
+	  
+	  
+	  
+	  
+/*for menu*/
+.menu {
+    list-style-type: none;
+    margin: 0;
+    padding-top: 12px;
+    overflow: hidden;
+    background-color: white;
+}
+
+li.menu {
+    float: left;
+}
+
+li.menu a {
+    display: inline-block;
+	background-color: white;
+    color: black;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+/* Change the link color to #111 (black) on hover */
+li.menu a:hover {
+	color: #f44336;
+	opacity: 0.9;
+}
+
+.active {
+	background-color: #f44336;
+}
+
+.post {
+	padding-top: 100px;
+	padding-left: 100px;
+	padding-right: 100px:
+}
+
+
+.list {
+	list-style-type: none;
+    margin:10px;
+    padding:10px;
+	display:inline-block;
+	
+}
+
+

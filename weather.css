@@ -1,0 +1,42 @@
+.weather{
+    width: 300px;
+    height: 100px;
+    border: 1px solid black;
+    padding: 5px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.weather-loc{
+    font-size: 18px;
+}
+
+.weather-temp{
+    float:left;
+}
+.weather-temp::before{
+    content: 'Currently ';
+}
+
+.weather-humidity{
+    float: right;
+}
+.weather-humidity::before{
+    content: 'Humidity: ';
+}
+.weather-humidity::after{
+    content: '%';
+}
+
+.weather-tomorrow {
+    position: absolute;
+    top: 90px;
+    left: 80px;
+}
+
+.weather-dayaftertomorrow
+{
+    position: absolute;
+    top: 90px;
+    left: 190px;
+}

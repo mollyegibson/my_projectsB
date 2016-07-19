@@ -1,0 +1,131 @@
+<!DOCTYPE HTML>
+<head>
+    <title> Calculator </title>
+</head>
+<body>
+
+<!--    appearance   -->
+
+    <!--  input 1  -->
+    <input id="fielda" placeholder="input 1" /> <br />
+    
+    <!--  input 2  -->
+    <input id="fieldb" placeholder="input 2" /> <br />
+
+    <!--  radio button  -->
+    <label> <input id = "select" name = "calculate" type="radio" value = "add" /> + </label><br />
+    <label> <input id = "select2" name = "calculate" type="radio" value = "subtract" /> - </label><br />
+    <label> <input id = "select3" name = "calculate" type="radio" value = "multiply" /> * </label><br />
+    <label> <input id = "select4" name = "calculate" type="radio" value = "divide" /> / </label><br />
+
+    <output id="result"> Answer: </output>
+
+
+<script type="text/javascript">
+    
+    //Content
+     document.addEventListener("DOMContentLoaded", function(){
+        document.getElementById("fielda").addEventListener("change", function() {
+            var a = parseFloat(document.getElementById("fielda").value);
+            var b = parseFloat(document.getElementById("fieldb").value);
+            checkFunction(a,b);
+            document.getElementById("result").textContent = "Answer: " + answer;
+        }, false);
+    
+        document.getElementById("fieldb").addEventListener("change", function() {
+            var a = parseFloat(document.getElementById("fielda").value);
+            var b = parseFloat(document.getElementById("fieldb").value);
+            checkFunction(a,b);
+            document.getElementById("result").textContent = "Answer: " + answer;
+        }, false);
+   
+        document.getElementById("select").addEventListener("change", function() {
+            var a = parseFloat(document.getElementById("fielda").value);
+            var b = parseFloat(document.getElementById("fieldb").value);
+            checkFunction(a,b);
+            document.getElementById("result").textContent = "Answer: " + answer;
+        }, false);
+   
+        document.getElementById("select2").addEventListener("change", function() {
+            var a = parseFloat(document.getElementById("fielda").value);
+            var b = parseFloat(document.getElementById("fieldb").value);
+            checkFunction(a,b);
+            document.getElementById("result").textContent = "Answer: " + answer;
+        }, false);
+    
+        document.getElementById("select3").addEventListener("change", function() {
+            var a = parseFloat(document.getElementById("fielda").value);
+            var b = parseFloat(document.getElementById("fieldb").value);
+            checkFunction(a,b);
+            document.getElementById("result").textContent = "Answer: " + answer;
+        }, false);
+    
+        document.getElementById("select4").addEventListener("change", function() {
+            var a = parseFloat(document.getElementById("fielda").value);
+            var b = parseFloat(document.getElementById("fieldb").value);
+            checkFunction(a,b);
+            document.getElementById("result").textContent = "Answer: " + answer;
+        }, false);
+    }, false);
+
+    //Behavior
+    
+        //add
+        function add(a,b) {
+            answer = a+b;
+            return answer;
+        }
+        
+        //subtract
+        function subtract(a,b) {
+            answer = a-b;
+            return answer;
+        }
+        
+        //multiply
+        function multiply(a,b) {
+            answer = a*b;
+            return answer;
+        }
+        
+        //divide
+        function divide(a,b) {
+            if (a === 0 || b === 0) {
+                alert('cannot divide by 0');
+            }
+            else{
+            answer = a/b;
+            return answer;
+            }
+        }
+    
+        //check which function
+        
+        function checkFunction(a,b) {
+            var radio_pointers = document.getElementsByName("calculate");
+            var which_function = null;
+            for (var i=0; i<radio_pointers.length; i++) {
+                if(radio_pointers[i].checked) {
+                    which_function = radio_pointers[i].value;
+                }
+            }
+            
+            switch (which_function) {
+                case 'add':
+                    add(a,b);
+                    break;
+                case 'subtract':
+                    subtract(a,b);
+                    break;
+                case 'multiply':
+                    multiply(a,b);
+                    break;
+                case 'divide':
+                    divide(a,b);
+            }
+        }
+        
+        
+</script>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE HTML>
+<head>
+    <title> Weather Widget </title>
+    <link rel="stylesheet" type="text/css" href="weather.css" />
+</head>
+<body>
+    
+    <button class="weather-btn" id="btn"> refresh </button>
+    
+    <br />
+<div class="weather" id="weatherWidget">
+    
+    <div class="weather-loc" id ="weather-loc">
+    </div>
+    
+	<div class="weather-humidity" id="weather-humidity">
+
+    </div>
+    
+	<div class="weather-temp" id="weather-temp">
+
+    </div>
+    
+	<div class="weather-tomorrow" id = "weather-tmr">
+        
+    </div>    
+
+	<div class="weather-dayaftertomorrow" id = "weather-dayafter" />
+    
+    </div>
+
+</div>
+
+
+<script type="text/javascript">
+    
+        //fetch weather
+        function fetchWeather() {
+            var xmlHttp = new XMLHttpRequest();
+            xmlHttp.open("POST", "http://classes.engineering.wustl.edu/cse330/content/weather_json.php", true);
+            xmlHttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xmlHttp.addEventListener ("load", ajaxCallback, false);
+            xmlHttp.send();
+        }
+
+        
+        //callback
+            
+        function ajaxCallback(event) {
+            var htmlLoc = document.getElementById("weather-loc");
+            var htmlHum = document.getElementById("weather-humidity");
+            var htmlTemp = document.getElementById("weather-temp");
+            var htmlTmr = document.getElementById("weather-tmr");
+            var htmldayafter = document.getElementById("weather-dayafter");
+            var jsonData = JSON.parse(event.target.responseText);
+        
+            //location
+            
+                //city
+            var city = (jsonData.location.city);
+               
+                //state
+            var state = (jsonData.location.state);
+            
+            //humidity
+            var humidity = (jsonData.atmosphere.humidity);
+            
+            //current temp
+            var currenttemp = (jsonData.current.temp);
+            
+            //tomorrow image
+            var imgone = (jsonData.tomorrow.code);
+            var imgone_src = "http://us.yimg.com/i/us/nws/weather/gr/";
+            var imgone_src_two = "ds.png";
+            
+            //dayafter image
+            var imgtwo = (jsonData.dayafter.code);
+            var imgtwo_src = "http://us.yimg.com/i/us/nws/weather/gr/";
+            var imgtwo_src_two = "ds.png";
+        
+        htmlLoc.innerHTML = "<strong>" + city + "</strong>" + ", " + state;
+        htmlHum.textContent = humidity; // Write the message itself
+        htmlTemp.textContent = currenttemp; // Write the message itself
+        htmlTmr.innerHTML = "<img src = '"+imgone_src+imgone+imgone_src_two+"'>"; // Finally, append the salutation
+        htmldayafter.innerHTML = "<img src = '"+imgtwo_src+imgtwo+imgtwo_src_two+"'>"; // Finally, append the salutation
+        }
+        
+        
+        document.addEventListener("DOMContentLoaded", fetchWeather, false);
+        
+        document.getElementById("btn").addEventListener("click", fetchWeather, false); 
+</script>
+
+
+</body>
+</html>
