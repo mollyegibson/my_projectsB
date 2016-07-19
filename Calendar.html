@@ -44,20 +44,22 @@
     <h1>Sign In</h1>	
 	<br>
 	
-	<form action="login.php" method="POST">
+	<form action="login_ajax.php" method="POST">
 		<h2 class="input-list style-1 right">
 
 		<label for="username"></label>
-		<input type="text" name="user" id="username" placeholder="Username"/>
+		<input type="text" name="username" id="username" placeholder="Username"/>
 
         <label for="password"></label>
-		<input type="password" name="pass" id="password" placeholder="Password"/>
+		<input type="password" name="password" id="password" placeholder="Password"/>
         
 		<input class ="login" name="submit" type="submit" value=" Sign In "/>
 		</h2>
 
 	</form>
     
+    <input class="login" type="button" value="Sign In / Sign Up" onclick= "showdialog();" /></li>
+    <div id = "mydialog" title="Sign In / Sign Up">
     <h1>Sign up</h1>
 	<form action="signup.php" method="POST">
 		<h2 class="input-list style-1 right">
