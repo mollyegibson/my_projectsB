@@ -7,7 +7,12 @@ $username = $_POST['username'];
 $password = $_POST['password'];
  
 // Check to see if the username and password are valid.  (You learned how to do this in Module 3.)
-
+if(isset($_POST['submit'])) {
+	if (empty($_POST['user']) || empty($_POST['pass'])) {
+		$error = "Wrong username or password";
+	}
+    else {
+        
 	// Use a prepared statement
 	$stmt = $mysqli->prepare("SELECT COUNT(*), username, password FROM users WHERE username=?");
  
@@ -39,5 +44,6 @@ $password = $_POST['password'];
 		"message" => "Incorrect Username or Password"
 	));
 	exit;
+    }
     }
 ?>
