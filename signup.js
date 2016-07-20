@@ -19,18 +19,6 @@ function signupAjax(event){
 	}, false); // Bind the callback to the load event
 	xmlHttp.send(dataString); // Send the data
 }
- 
-function enterPress(e)
-{
-    // look for window.event in case event isn't passed in
-    e = e || window.event;
-    if (e.keyCode == 13)
-    {
-        document.getElementById('signup_btn').click();
-        return false;
-    }
-    return true;
-}
 
 var signup = document.getElementById("signup_btn");
 document.addEventListener('DOMContentLoaded', function () {
