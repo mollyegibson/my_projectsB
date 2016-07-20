@@ -11,16 +11,12 @@ if($mysqli->connect_error) {
 	exit;
 }
 
+$name = $_POST['name'];
 $username = $_POST['username'];
 $password = $_POST['password'];
  
 // Check to see if the username and password are valid.  (You learned how to do this in Module 3.)
-if(isset($_POST['submit'])) {
-	if (empty($_POST['user']) || empty($_POST['pass']) || empty($_POST['name'])) {
-		$error = "Missing Information";
-        echo $error;
-	}
-	else {
+
 	// Use a prepared statement
 	$password = crypt($password);
 
@@ -49,6 +45,6 @@ if(isset($_POST['submit'])) {
             ));
             exit;
            }
-    }
-}
+
+
 ?>

@@ -7,12 +7,7 @@ $username = $_POST['username'];
 $password = $_POST['password'];
  
 // Check to see if the username and password are valid.  (You learned how to do this in Module 3.)
-if(isset($_POST['submit'])) {
-	if (empty($_POST['user']) || empty($_POST['pass'])) {
-		$error = "Wrong username or password";
-	}
-    else {
-        
+
 	// Use a prepared statement
 	$stmt = $mysqli->prepare("SELECT COUNT(*), username, password FROM users WHERE username=?");
  
@@ -26,24 +21,23 @@ if(isset($_POST['submit'])) {
 	$stmt->fetch();
  
 	// Compare the submitted password to the actual password hash
-	if( $cnt == 1 && crypt($pwd_guess, $pwd_hash)==$pwd_hash){
+        if( $cnt == 1 && crypt($pwd_guess, $pwd_hash)==$pwd_hash){
 
-	session_start();
-	$_SESSION['username'] = $username;
-	$_SESSION['token'] = substr(md5(rand()), 0, 10);
+        session_start();
+        $_SESSION['username'] = $username;
+        $_SESSION['token'] = substr(md5(rand()), 0, 10);
  
-	echo json_encode(array(
-		"success" => true
-	));
-	exit;
-    }
+        echo json_encode(array(
+        	"success" => true
+        ));
+        exit;
+        }
     
-    else{
-	echo json_encode(array(
-		"success" => false,
-		"message" => "Incorrect Username or Password"
-	));
-	exit;
-    }
-    }
+        else{
+            echo json_encode(array(
+        	"success" => false,
+        	"message" => "Incorrect Username or Password"
+        ));
+        exit;
+            }
 ?>
