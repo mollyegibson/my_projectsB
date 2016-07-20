@@ -10,8 +10,7 @@
     
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js" type="text/javascript"></script>
     
-    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/start/jquery-ui.css"
-    type="text/css" rel="Stylesheet" />
+    <link href="jquery-ui.css" type="text/css" rel="Stylesheet" />
     <!-- We need the style sheet linked above or the dialogs/other parts of jquery-ui won't display correctly!-->
 
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
@@ -40,42 +39,41 @@
 <!--login-->
     <li class =right><input class="login" type="button" value="Sign In / Sign Up" onclick= "showdialog();" /></li>
     <div id = "mydialog" title="Sign In / Sign Up">
-    <h1>Sign In</h1>	
-	<br>
-		<h2 class="input-list style-1 right">
+    <p>Sign In</p>	
             
 		<label for="username"></label>
 		<input type="text" name="username" id="username" placeholder="Username"/>
-
+        <br />
         <label for="password"></label>
-		<input type="password" name="password" id="password" placeholder="Password"/>
+		<input type="password" name="password" id="password" placeholder="Password" />
+        <br />
         <button class ="login" id="login_btn">Sign In</button>
         <script type="text/javascript" src="login.js"></script>
-
-		</h2>
+    <br />
     
-<!--    <h1>Sign up</h1>-->
-<!--		<h2 class="input-list style-1 right">-->
-<!--            -->
-<!--        <label for="name">Name:</label>-->
-<!--		<input type="text" name="name" id="name" placeholder="Name"/>-->
-<!---->
-<!--		<label for="username">Username:</label>-->
-<!--		<input type="text" name="username" id="username_signup" placeholder="Username"/>-->
-<!---->
-<!--        <label for="password">Password:</label>-->
-<!--		<input type="password" name="password" id="password_signup" placeholder="Password"/>-->
-<!--        -->
-<!--        <button class ="login" id="signup_btn">Sign Up</button>-->
-<!--        <script type="text/javascript" src="signup.js"></script>-->
-<!--		</h2>-->
+    <p>Sign up</p>
+        
+        <label for="name"></label>
+		<input type="text" name="name" id="name" placeholder="Name"/>
+        <br />
+
+		<label for="username"></label>
+		<input type="text" name="username" id="username_signup" placeholder="Username"/>
+        <br />
+
+        <label for="password"></label>
+		<input type="password" name="password" id="password_signup" placeholder="Password"/>
+        <br />
+
+        <button class ="login" id="signup_btn">Sign Up</button>
+        <script type="text/javascript" src="signup.js"></script>
 
     </div>
     </ul>
 </header>
 
 
-<center>
+<div class="calendar">
     
 <script language="javascript" type="text/javascript">
 var day_of_week = new Array('Sun','Mon','Tue','Wed','Thu','Fri','Sat');
@@ -184,7 +182,7 @@ document.write(cal);
 
 //  End -->
 </script>
-</center>
+</div>
 
 
 </body>
