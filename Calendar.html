@@ -1,33 +1,46 @@
+
 <!DOCTYPE HTML>
 <head>
-    <style>
-        #mydialog { display:none }
-    </style>
-    
-    <title> Calendar </title>
-    
-    <link rel="stylesheet" type="text/css" href="calendar.css" />
-    
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js" type="text/javascript"></script>
-    
-    <link href="jquery-ui.css" type="text/css" rel="Stylesheet" />
-    <!-- We need the style sheet linked above or the dialogs/other parts of jquery-ui won't display correctly!-->
+<script type="text/javascript">
 
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
-    <!-- The main library. Note: must be listed before the jquery-ui library -->
+var myDoc = document;
 
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.5/jquery-ui.min.js"></script>
-    <!-- jquery-UI hosted on Google's Ajax CDN-->
-    <!-- Note: you can download the javascript file from the link provided on the google doc, or simply provide its URLin the src attribute (microsoft and google also host the jQuery library-->
-    
-    <script type="text/javascript">
+function fetchCal(){
+  var xmlHttp = new XMLHttpRequest();
+  xmlHttp.open("GET", "getevents.php", true);
+  xmlHttp.addEventListener("load", ajaxCallback, false);
+  xmlHttp.send(null);
+}
 
-    function showdialog()
-    {
-      $("#mydialog").dialog();
-    }
+</script>
+<style>
+    #mydialog { display:none }
+</style>
 
-    </script>
+<title> Calendar </title>
+
+<link rel="stylesheet" type="text/css" href="calendar.css" />
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js" type="text/javascript"></script>
+
+<link href="jquery-ui.css" type="text/css" rel="Stylesheet" />
+<!-- We need the style sheet linked above or the dialogs/other parts of jquery-ui won't display correctly!-->
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
+<!-- The main library. Note: must be listed before the jquery-ui library -->
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.5/jquery-ui.min.js"></script>
+<!-- jquery-UI hosted on Google's Ajax CDN-->
+<!-- Note: you can download the javascript file from the link provided on the google doc, or simply provide its URLin the src attribute (microsoft and google also host the jQuery library-->
+
+<script type="text/javascript">
+
+function showdialog()
+{
+  $("#mydialog").dialog();
+}
+
+</script>
 
 </head>
 <body>
@@ -79,31 +92,33 @@
 var day_of_week = new Array('Sun','Mon','Tue','Wed','Thu','Fri','Sat');
 var month_of_year = new Array('January','February','March','April','May','June','July','August','September','October','November','December');
 
-//  DECLARE AND INITIALIZE VARIABLES
-var Calendar = new Date();
 
-var year = Calendar.getFullYear();     // Returns year
-var month = Calendar.getMonth();    // Returns month (0-11)
-var today = Calendar.getDate();    // Returns day (1-31)
-var weekday = Calendar.getDay();    // Returns day (1-31)
+//  DECLARE AND INITIALIZE VARIABLES
+
+function ajaxCallback(event){
+  var eventData = JSON.parse(event.target.responseText);
+}
+
+  var Today = new Date();
+
+var year = Today.getFullYear();     // Returns year
+var month = Today.getMonth();    // Returns month (0-11)
+var today = Today.getDate();    // Returns day (1-31)
+var weekday = Today.getDay();    // Returns day (0-6)
 
 var DAYS_OF_WEEK = 7;    // "constant" for number of days in a week
 var DAYS_OF_MONTH = 31;    // "constant" for number of days in a month
 var cal;    // Used for printing
 
-Calendar.setDate(1);    // Start the calendar day at '1'
-Calendar.setMonth(month);    // Start the calendar month at now
+Today.setDate(1);    // Set today to the first day of the month
+Calendar.setMonth(month); // Start the calendar month at now
 
-
-/* VARIABLES FOR FORMATTING
-NOTE: You can format the 'BORDER', 'BGCOLOR', 'CELLPADDING', 'BORDERCOLOR'
-      tags to customize your caledanr's look. */
-
+//Create table variables to make the syntax cleaner
 var TR_start = '<TR>';
 var TR_end = '</TR>';
-var highlight_start = '<TD WIDTH="100" HEIGHT="100"><TABLE CELLSPACING=0 BORDER=1 BGCOLOR=DEDEFF BORDERCOLOR=CCCCCC><TR><TD WIDTH=100 HEIGHT=100><B><CENTER>';
+var highlight_start = '<TD WIDTH="150" HEIGHT="150"><TABLE CELLSPACING=0 BORDER=1 BGCOLOR=DEDEFF BORDERCOLOR=CCCCCC><TR><TD WIDTH=150 HEIGHT=150><B><CENTER>';
 var highlight_end   = '</CENTER></TD></TR></TABLE></B>';
-var TD_start = '<TD WIDTH="100" HEIGHT="100"><CENTER>';
+var TD_start = '<TD WIDTH="150" HEIGHT="150"><CENTER>';
 var TD_end = '</CENTER></TD>';
 
 /* BEGIN CODE FOR CALENDAR
@@ -112,19 +127,17 @@ tags to customize your calendar's look.*/
 
 cal =  '<TABLE BORDER=1 CELLSPACING=0 CELLPADDING=0 BORDERCOLOR=BBBBBB><TR><TD>';
 cal += '<TABLE BORDER=1 CELLSPACING=0 CELLPADDING=0>' + TR_start;
-cal += '<TD COLSPAN="' + DAYS_OF_WEEK + '" BGCOLOR="#EFEFEF"><CENTER><B>';
-cal += month_of_year[month]  + '   ' + year + '</B>' + TD_end + TR_end;
+cal += '<TD COLSPAN="' + DAYS_OF_WEEK + '" BGCOLOR="#EFEFEF"><FONT SIZE=20><CENTER><B>';
+cal += month_of_year[month]  + '   ' + year + '</FONT></B>' + TD_end + TR_end;
 cal += TR_start;
 
-//   DO NOT EDIT BELOW THIS POINT  //
 
-// LOOPS FOR EACH DAY OF WEEK
-for(index=0; index < DAYS_OF_WEEK; index++)
-{
+// Shows each day of the week at the top of the calander
+for(index=0; index < DAYS_OF_WEEK; index++){
 
-// BOLD TODAY'S DAY OF WEEK
+// Bold Today
 if(weekday == index)
-cal += TD_start + '<B>' + day_of_week[index] + '</B>' + TD_end;
+cal +=  TD_start + '<B>' + day_of_week[index] + '</B>' + TD_end;
 
 // PRINTS DAY
 else
@@ -153,6 +166,8 @@ if( Calendar.getDate() > index )
   if(week_day != DAYS_OF_WEEK)
   {
 
+  //we can display events based on the day of the month that they occur
+  
   // SET VARIABLE INSIDE LOOP FOR INCREMENTING PURPOSES
   var day  = Calendar.getDate();
 
@@ -162,13 +177,13 @@ if( Calendar.getDate() > index )
 
   // PRINTS DAY
   else
-  cal += TD_start + day + TD_end;
+  cal += '<TD WIDTH="100" HEIGHT="100" ALIGN="right"><B>'+ day + TD_end;
   }
 
   // END ROW FOR LAST DAY OF WEEK
   if(week_day == DAYS_OF_WEEK)
   cal += TR_end;
-  }
+}
 
   // INCREMENTS UNTIL END OF THE MONTH
   Calendar.setDate(Calendar.getDate()+1);
