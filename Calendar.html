@@ -98,7 +98,7 @@ var month_of_year = new Array('January','February','March','April','May','June',
 function ajaxCallback(event){
   var Today = new Date();
   var jsonData = JSON.parse(event.target.responseText);
-  console.log(jsonData[0].event_name);
+  alert(jsonData[2].date.getDate());
 
 // alert(event.target.responseText.eventData[0].event_name);
 
