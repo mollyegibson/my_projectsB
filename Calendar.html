@@ -1,13 +1,13 @@
-
 <!DOCTYPE HTML>
 <head>
+
 <script type="text/javascript">
 
 var myDoc = document;
 
 function fetchCal(){
   var xmlHttp = new XMLHttpRequest();
-  xmlHttp.open("GET", "getevents.php", true);
+  xmlHttp.open("GET", "getevents.php", true);  //figure out how to pass 'username' into the getevents.php url (getevents.php?username='')
   xmlHttp.addEventListener("load", ajaxCallback, false);
   xmlHttp.send(null);
 }
@@ -96,10 +96,11 @@ var month_of_year = new Array('January','February','March','April','May','June',
 //  DECLARE AND INITIALIZE VARIABLES
 
 function ajaxCallback(event){
- // var eventData = JSON.parse(event.target.responseText);
   var Today = new Date();
+  var jsonData = JSON.parse(event.target.responseText);
+  console.log(jsonData[0].event_name);
 
- // console.log(eventData[0].event_name);
+// alert(event.target.responseText.eventData[0].event_name);
 
   var year = Today.getFullYear();     // Returns year
   var month = Today.getMonth();    // Returns month (0-11)
@@ -180,7 +181,6 @@ function ajaxCallback(event){
         date = Today.getDate();
         if (date > 3){
           row_id = Today.getSunday().getDate();
-          console.log(row_id.toString());
         }
         var a = document.createElement("TD");
         a.style.borderBottom = "medium solid #0000FF";
@@ -193,13 +193,10 @@ function ajaxCallback(event){
         document.getElementById(row_id.toString()).appendChild(a);
         Today.setDate(Today.getDate()+1);
         weekday = Today.getDay();
-       // if (weekday === 0){break;}
-        console.log("BOTTOM Weekday: " +weekday+ " Date: " +Today.getDate());
       }
 
     if (weekday === 0){
         row_id = Today.getSunday().getDate();
-        console.log("SUN Weekday: " +weekday+ " Date: " +Today.getDate());
         date = Today.getDate();
         var newRow = document.createElement("TR");  //create new row if it's sunday
         newRow.style.height = "100px";
