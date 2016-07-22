@@ -25,7 +25,16 @@ function afterlogin() {
     var welcome = document.getElementById("welcome");
     $("#mydialog").dialog('close');
     welcome.textContent = "Welcome " + username; // writes username
-}
+    document.getElementById("login").value = "Logout";
+	document.getElementById("login").onclick = logout;
+	}
+	
+function logout() {
+	var xmlHttp = new XMLHttpRequest(); // Initialize our XMLHttpRequest instance
+	xmlHttp.open("POST", "logout.php", true); // Starting a POST request (NEVER send passwords as GET variables!!!)
+	window.location.reload();
+	}
+
 
 var login = document.getElementById("login_btn");
 document.addEventListener('DOMContentLoaded', function () {
