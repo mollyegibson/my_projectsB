@@ -1,9 +1,9 @@
 <?php
 require('database.php'); // Includes Database.php
 session_start();
-$_SESSION['username'] = $username;
+//$_SESSION['username'] = $username;
 //$_SESSION['token'] = substr(md5(rand()), 0, 10);
-$username = $_POST['username'];
+//$username = $_POST['username'];
 ?>
 
 <!DOCTYPE HTML>
