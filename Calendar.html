@@ -172,28 +172,32 @@ function makeCalendar(){
      // var week_day = Today.getDay(); //tells us the current day of the week we're printing
       var currentWeek = new Week(Today);
       var row_id = "0";
+      var first_sunday = Today.deltaDays(7).getSunday().getDay();
+      console.log("First Sunday: " +first_sunday);
     
-    while (weekday != 0){
-        console.log( "Weekday: " + weekday);
+    //actually if i take getSunday of the first day it'll give zero, so i dont need the (date > 3) if statement at all
+    while (weekday!=0){
         date = Today.getDate();
-        if (date > 6){
+        if (date > 3){
           row_id = Today.getSunday().getDate();
           console.log(row_id.toString());
         }
         var a = document.createElement("TD");
-        a.style.borderBottom = "medium solid #000FF";
-        a.style.borderRight = "medium solid #000FF";
+        a.style.border = "medium solid #000FF";
+        a.style.textAlign = "right";
+        a.style.verticalAlign = "top";
         a.style.fontSize = "20px";
         a.appendChild(document.createTextNode("" + date + "  "));
         document.getElementById(row_id.toString()).appendChild(a);
         Today.setDate(Today.getDate()+1);
         weekday = Today.getDay();
-
+       // if (weekday === 0){break;}
+        console.log("BOTTOM Weekday: " +weekday+ " Date: " +Today.getDate());
       }
 
     if (weekday === 0){
         row_id = Today.getSunday().getDate();
-        console.log(row_id.toString());
+        console.log("SUN Weekday: " +weekday+ " Date: " +Today.getDate());
         date = Today.getDate();
         var newRow = document.createElement("TR");  //create new row if it's sunday
         newRow.style.height = "60px";
@@ -201,8 +205,10 @@ function makeCalendar(){
         document.getElementById("cal").appendChild(newRow);
         
         var b = document.createElement("TD");
-        b.style.borderBottom = "medium solid #000FF";
-        b.style.borderRight = "medium solid #000FF";
+        b.style.border = "medium solid #000FF";
+        b.style.fontSize = "20px";
+        b.style.textAlign = "right";
+        b.style.verticalAlign = "top";
         b.appendChild(document.createTextNode("" + date + ""));
         newRow.appendChild(b);
         Today.setDate(Today.getDate()+1);
