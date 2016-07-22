@@ -31,13 +31,12 @@ echo json_encode($events);
 
 $stmt->close();
 
-/*<script type="text/javascript">
+?>
+
+<script type="text/javascript">
 
 var eventData = <?php echo json_encode($events, JSON_PRETTY_PRINT) ?>;
 
-alert(eventData[0].event_name);
+console.log(eventData[0].event_name);
 
-</script>*/ // only within the PHP bc it wont let me comment things out elsewhere
-
-?>
-
+</script>
