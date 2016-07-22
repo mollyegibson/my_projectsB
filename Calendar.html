@@ -166,7 +166,7 @@ function makeCalendar(){
   }
 
   for(index=0; index < DAYS_OF_MONTH; index++){
-    var week_day = Today.getDay();
+    //var week_day = Today.getDay();
 
     if (Today.getDate() > index){
      // var week_day = Today.getDay(); //tells us the current day of the week we're printing
@@ -174,7 +174,7 @@ function makeCalendar(){
       var row_id = "0";
     
     while (weekday != 0){
-        weekday = Today.getDay();
+        console.log( "Weekday: " + weekday);
         date = Today.getDate();
         if (date > 6){
           row_id = Today.getSunday().getDate();
@@ -187,9 +187,11 @@ function makeCalendar(){
         a.appendChild(document.createTextNode("" + date + "  "));
         document.getElementById(row_id.toString()).appendChild(a);
         Today.setDate(Today.getDate()+1);
+        weekday = Today.getDay();
+
       }
 
-    if (week_day === 0){
+    if (weekday === 0){
         row_id = Today.getSunday().getDate();
         console.log(row_id.toString());
         date = Today.getDate();
@@ -204,6 +206,7 @@ function makeCalendar(){
         b.appendChild(document.createTextNode("" + date + ""));
         newRow.appendChild(b);
         Today.setDate(Today.getDate()+1);
+        weekday = Today.getDay();
       }
 
 
