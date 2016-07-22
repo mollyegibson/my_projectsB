@@ -48,9 +48,8 @@ function showdialog()
 <header>
     <ul>
     <li class=logo>Calendar</li>
-    
 <!--login-->
-    <li class =right><input class="login" type="button" value="Sign In / Sign Up" onclick= "showdialog();" /></li>
+    <li class =right id="loginbutton" ><input class="login" type="button" value="Sign In / Sign Up" onclick= "showdialog();" /></li>
     <div id = "mydialog" title="Sign In / Sign Up">
     <p>Sign In</p>	
             
@@ -83,8 +82,10 @@ function showdialog()
 
     </div>
     </ul>
-</header>
+        <div id = "welcome" class= "welcome"></div>
 
+</header>
+    
 
 <div class="calendar">
 <p id="table" align="center"></p>   

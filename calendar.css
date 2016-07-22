@@ -14,15 +14,17 @@ body{
 	  padding-right: 30px;
       font-weight: 100;
       font-family: Century Gothic, Arial, sans-serif;}
+
 ul {
-    list-style-type: none;
-    margin:0;
-    padding:0;
-	display:inline;
+	list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
 }
 
 li {
     float: left;
+	display: block;
     display: inline-block;
     padding-top: 14px;
     padding-left: 14px;
@@ -33,6 +35,12 @@ li {
 
 li.right {
     float: right;
+    padding-right: 20px;
+}
+
+.right {
+    float: right;
+	padding-top: 5px;
     padding-right: 20px;
 }
 
@@ -54,9 +62,22 @@ li.right {
     color: white;
 }
 
+.calendar {
+	float: right;
+	padding-top: 40px;
+	padding-right: 20px;
+}
 
-
-
+.welcome {
+      text-align: left;
+      font-size: 10pt;
+	  font-style: italic;
+	  color: blue;
+	  padding: 14px 16px;
+	  padding-top: 20px;
+	  padding-right: 30px;
+      font-weight: 100;
+      font-family: Century Gothic, Arial, sans-serif;}
 
 
 

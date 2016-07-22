@@ -12,6 +12,7 @@ function loginAjax(event){
 		var jsonData = JSON.parse(event.target.responseText); // parse the JSON into a JavaScript object
 		if(jsonData.success){  // in PHP, this was the "success" key in the associative array; in JavaScript, it's the .success property of jsonData
 			alert("You've been Logged In!");
+            afterlogin();
 		}else{
 			alert("You were not logged in.  "+jsonData.message);
 		}
@@ -19,17 +20,21 @@ function loginAjax(event){
 	xmlHttp.send(dataString); // Send the data
 }
 
-function enterPress(e)
-{
-    // look for window.event in case event isn't passed in
-    e = e || window.event;
-    if (e.keyCode == 13)
-    {
-        document.getElementById('login_btn').click();
-        return false;
-    }
-    return true;
-}
+function afterlogin() {
+    var username = document.getElementById("username").value;
+    var welcome = document.getElementById("welcome");
+    $("#mydialog").dialog('close');
+    welcome.textContent = "Welcome " + username; // writes username
+    document.getElementById("login").value = "Logout";
+	document.getElementById("login").onclick = logout;
+	}
+	
+function logout() {
+	var xmlHttp = new XMLHttpRequest(); // Initialize our XMLHttpRequest instance
+	xmlHttp.open("POST", "logout.php", true); // Starting a POST request (NEVER send passwords as GET variables!!!)
+	window.location.reload();
+	}
+
 
 var login = document.getElementById("login_btn");
 document.addEventListener('DOMContentLoaded', function () {
