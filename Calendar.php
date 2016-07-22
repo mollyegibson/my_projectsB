@@ -30,6 +30,15 @@ $username = $_POST['username'];
     
     <script type="text/javascript">
 
+	var myDoc = document;
+	
+	function fetchCal(){
+		var xmlHttp = new XMLHttpRequest();
+		xmlHttp.open("GET", "getevents.php", true);  //figure out how to pass 'username' into the getevents.php url (getevents.php?username='')
+		xmlHttp.addEventListener("load", ajaxCallback, false);
+		xmlHttp.send(null);
+	}
+	
     function showdialog()
     {
       $("#mydialog").dialog();
@@ -89,115 +98,198 @@ $username = $_POST['username'];
     
 
 <div class="calendar">
-    
+<p id="table" align="center"></p>   
 <script language="javascript" type="text/javascript">
 var day_of_week = new Array('Sun','Mon','Tue','Wed','Thu','Fri','Sat');
 var month_of_year = new Array('January','February','March','April','May','June','July','August','September','October','November','December');
 
+
 //  DECLARE AND INITIALIZE VARIABLES
-var Calendar = new Date();
 
-var year = Calendar.getFullYear();     // Returns year
-var month = Calendar.getMonth();    // Returns month (0-11)
-var today = Calendar.getDate();    // Returns day (1-31)
-var weekday = Calendar.getDay();    // Returns day (1-31)
+function ajaxCallback(event){
+  var Today = new Date();
+  var jsonData = JSON.parse(event.target.responseText);
+  console.log(jsonData[0].event_name);
 
-var DAYS_OF_WEEK = 7;    // "constant" for number of days in a week
-var DAYS_OF_MONTH = 31;    // "constant" for number of days in a month
-var cal;    // Used for printing
+// alert(event.target.responseText.eventData[0].event_name);
 
-Calendar.setDate(1);    // Start the calendar day at '1'
-Calendar.setMonth(month);    // Start the calendar month at now
+  var year = Today.getFullYear();     // Returns year
+  var month = Today.getMonth();    // Returns month (0-11)
+  var today = Today.getDate();    // Returns day (1-31)
+  var weekday = Today.getDay();    // Returns day (0-6)
+  currentMonth = new Month(year, month);
+  Today.setDate(1);    // Set today to the first day of the month
+  Today.setMonth(month); 
+  var DAYS_OF_WEEK = 7;    // "constant" for number of days in a week
+  var DAYS_OF_MONTH = 31;    // "constant" for number of days in a month
+
+  //Create a table DOM 
+  var cal = document.createElement("TABLE");    
+  cal.style.width = "75%";
+  cal.style.height = "400px";
+  cal.style.border = "thick solid #0000FF";
+  cal.setAttribute("id", "cal");
+  document.getElementById("table").appendChild(cal);
+
+  var firstRow = document.createElement("TR");
+  firstRow.setAttribute("id", "firstrow");
+  document.getElementById("cal").appendChild(firstRow);
+
+  var top = document.createElement("TD");
+  top.style.width = "100%";
+  top.style.height = "40px";
+  top.style.textAlign = "center";
+  top.style.fontSize = "35px";
+  top.setAttribute("id", "top");
+  top.setAttribute("colspan", "7"); 
+  top.appendChild(document.createTextNode("" +month_of_year[month]+ " " +year+ ""));
+  document.getElementById("firstrow").appendChild(top);
+
+  var secondRow = document.createElement("TR");
+  secondRow.style.height = "70px";
+  secondRow.setAttribute("id", "secondrow");
+  document.getElementById("cal").appendChild(secondRow);
+
+  for (index=0; index < DAYS_OF_WEEK; index++){  //displaying names of each day
+    //maybe later i can change it so today is bold but for now
+    var x = document.createElement("TD");
+    x.style.textAlign = "center";
+    x.style.fontSize = "25px";
+    x.style.width = "174px";
+    x.style.borderBottom = "medium solid #0000FF";
+    x.style.borderTop = "medium solid #0000FF";
+    x.appendChild(document.createTextNode("" + day_of_week[index] + ""));
+    document.getElementById("secondrow").appendChild(x);
+  }
+
+  var rowThree = document.createElement("TR");
+  rowThree.style.height = "100px";
+  //rowThree.style.border = "medium solid #0000FF";
+  rowThree.setAttribute("id", "0");
+  document.getElementById("cal").appendChild(rowThree);
+
+  for(index=0; index < Today.getDay(); index++){  //Fill in blank days until we get to today
+    var y = document.createElement("TD");
+    y.style.borderBottom = "medium solid #0000FF";
+    y.style.width = "174px"; 
+    y.style.borderRight = "medium solid #0000FF";
+    y.appendChild(document.createTextNode(" "));
+    document.getElementById("0").appendChild(y);
+  }
+
+  for(index=0; index < DAYS_OF_MONTH; index++){
+    //var week_day = Today.getDay();
+
+    if (Today.getDate() > index){
+     // var week_day = Today.getDay(); //tells us the current day of the week we're printing
+      var currentWeek = new Week(Today);
+      var row_id = "0";
+      var first_sunday = Today.deltaDays(7).getSunday().getDay();
+      console.log("First Sunday: " +first_sunday);
+    
+    //actually if i take getSunday of the first day it'll give zero, so i dont need the (date > 3) if statement at all
+    while (weekday!=0){
+        date = Today.getDate();
+        if (date > 3){
+          row_id = Today.getSunday().getDate();
+        }
+        var a = document.createElement("TD");
+        a.style.borderBottom = "medium solid #0000FF";
+        a.style.borderRight = "medium solid #0000FF";
+        a.style.textAlign = "right";
+        a.style.width = "174px";
+        a.style.verticalAlign = "top";
+        a.style.fontSize = "20px";
+        a.appendChild(document.createTextNode("" + date + "  "));
+        document.getElementById(row_id.toString()).appendChild(a);
+        Today.setDate(Today.getDate()+1);
+        weekday = Today.getDay();
+      }
+
+    if (weekday === 0){
+        row_id = Today.getSunday().getDate();
+        date = Today.getDate();
+        var newRow = document.createElement("TR");  //create new row if it's sunday
+        newRow.style.height = "100px";
+        newRow.setAttribute("id",row_id.toString());
+        document.getElementById("cal").appendChild(newRow);
+        
+        var b = document.createElement("TD");
+        b.style.borderRight = "medium solid #0000FF";
+        b.style.borderBottom = "medium solid #0000FF";
+        b.style.fontSize = "20px";
+        b.style.width = "174px";
+        b.style.textAlign = "right";
+        b.style.verticalAlign = "top";
+        b.appendChild(document.createTextNode("" + date + ""));
+        newRow.appendChild(b);
+        Today.setDate(Today.getDate()+1);
+        weekday = Today.getDay();
+      }
 
 
-/* VARIABLES FOR FORMATTING
-NOTE: You can format the 'BORDER', 'BGCOLOR', 'CELLPADDING', 'BORDERCOLOR'
-      tags to customize your caledanr's look. */
+     
+    }
 
-var TR_start = '<TR>';
-var TR_end = '</TR>';
-var highlight_start = '<TD WIDTH="100" HEIGHT="100"><TABLE CELLSPACING=0 BORDER=1 BGCOLOR=DEDEFF BORDERCOLOR=CCCCCC><TR><TD WIDTH=100 HEIGHT=100><B><CENTER>';
-var highlight_end   = '</CENTER></TD></TR></TABLE></B>';
-var TD_start = '<TD WIDTH="100" HEIGHT="100"><CENTER>';
-var TD_end = '</CENTER></TD>';
+   // Today.setDate(Today.getDate()+1);
+  }
 
-/* BEGIN CODE FOR CALENDAR
-NOTE: You can format the 'BORDER', 'BGCOLOR', 'CELLPADDING', 'BORDERCOLOR'
-tags to customize your calendar's look.*/
-
-cal =  '<TABLE BORDER=1 CELLSPACING=0 CELLPADDING=0 BORDERCOLOR=BBBBBB><TR><TD>';
-cal += '<TABLE BORDER=1 CELLSPACING=0 CELLPADDING=0>' + TR_start;
-cal += '<TD COLSPAN="' + DAYS_OF_WEEK + '" BGCOLOR="#EFEFEF"><CENTER><B>';
-cal += month_of_year[month]  + '   ' + year + '</B>' + TD_end + TR_end;
-cal += TR_start;
-
-//   DO NOT EDIT BELOW THIS POINT  //
-
-// LOOPS FOR EACH DAY OF WEEK
-for(index=0; index < DAYS_OF_WEEK; index++)
-{
-
-// BOLD TODAY'S DAY OF WEEK
-if(weekday == index)
-cal += TD_start + '<B>' + day_of_week[index] + '</B>' + TD_end;
-
-// PRINTS DAY
-else
-cal += TD_start + day_of_week[index] + TD_end;
 }
 
-cal += TD_end + TR_end;
-cal += TR_start;
 
-// FILL IN BLANK GAPS UNTIL TODAY'S DAY
-for(index=0; index < Calendar.getDay(); index++)
-cal += TD_start + '  ' + TD_end;
 
-// LOOPS FOR EACH DAY IN CALENDAR
-for(index=0; index < DAYS_OF_MONTH; index++)
-{
-if( Calendar.getDate() > index )
-{
-  // RETURNS THE NEXT DAY TO PRINT
-  week_day =Calendar.getDay();
+(function(){
+  Date.prototype.deltaDays=function(c){  //returns a Date object c days in the future
+    return new Date(this.getFullYear(),this.getMonth(),this.getDate()+c);
+  };
+  
+  Date.prototype.getSunday=function(){ //returns the nearest Sunday in the past to the date
+    return this.deltaDays(-1*this.getDay());
+  };
+})();
 
-  // START NEW ROW FOR FIRST DAY OF WEEK
-  if(week_day === 0)
-  cal += TR_start;
-
-  if(week_day != DAYS_OF_WEEK)
-  {
-
-  // SET VARIABLE INSIDE LOOP FOR INCREMENTING PURPOSES
-  var day  = Calendar.getDate();
-
-  // HIGHLIGHT TODAY'S DATE
-  if( today==Calendar.getDate() )
-  cal += highlight_start + day + highlight_end + TD_end;
-
-  // PRINTS DAY
-  else
-  cal += TD_start + day + TD_end;
+  function Week(c){  //
+    this.sunday=c.getSunday();
+    this.nextWeek=function(){
+      return new Week(this.sunday.deltaDays(7));
+    };
+    this.prevWeek=function(){
+      return new Week(this.sunday.deltaDays(-7));
+    };
+    this.contains=function(b){
+      return this.sunday.valueOf()===b.getSunday().valueOf();
+    };
+    this.getDates=function(){
+      for(var b=[],a=0;7>a;a++)
+        b.push(this.sunday.deltaDays(a));
+        return b;
+    };
   }
 
-  // END ROW FOR LAST DAY OF WEEK
-  if(week_day == DAYS_OF_WEEK)
-  cal += TR_end;
+  function Month(c,b){  
+    this.year=c;
+    this.month=b;
+    this.nextMonth=function(){ 
+      return new Month(c+Math.floor((b+1)/12),(b+1)%12);
+    };
+    this.prevMonth=function(){
+      return new Month(c+Math.floor((b-1)/12),(b+11)%12);
+    };
+    this.getDateObject=function(a){
+      return new Date(this.year,this.month,a); 
+    };
+    this.getWeeks=function(){
+      var a=this.getDateObject(1),b=this.nextMonth().getDateObject(0),c=[],a=new Week(a);
+      for(c.push(a);!a.contains(b);)
+        a=a.nextWeek(),c.push(a);
+        return c;
+    };
   }
 
-  // INCREMENTS UNTIL END OF THE MONTH
-  Calendar.setDate(Calendar.getDate()+1);
-
-}// end for loop
-
-cal += '</TD></TR></TABLE></TABLE>';
-
-//  PRINT CALENDAR
-document.write(cal);
-
-//  End -->
+document.addEventListener("DOMContentLoaded", fetchCal, false);
 </script>
 </div>
+
 
 </body>
 </html>

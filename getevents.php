@@ -2,9 +2,9 @@
 session_start();
 require 'database.php';
 
-//$username = $_SESSION['username'];
+$username = $_SESSION['username'];
 
-$stmt = $mysqli->prepare("select * from events");// where username=$username");
+$stmt = $mysqli->prepare("select * from Calendar where username=$username");
 if(!$stmt){
 	printf("Query Prep Failed: %s\n", $mysqli->error);
 	exit;
@@ -22,7 +22,7 @@ while($row = $result->fetch_assoc()){
 			"event_name" => $row['event_name'],
 			"username" => $row['username'],
 			"date" => $row['date'], //or whatever we call it in the db
-			"event_id" => $row['event_id']
+			"id" => $row['id']
 
 		);
 		//$events[] = $event;
