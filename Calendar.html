@@ -87,7 +87,6 @@ function showdialog()
 
 
 <div class="calendar">
-<button id="button" onclick="makeCalendar();">Try it!</button>
 <p id="table" align="center"></p>   
 <script language="javascript" type="text/javascript">
 var day_of_week = new Array('Sun','Mon','Tue','Wed','Thu','Fri','Sat');
@@ -97,12 +96,10 @@ var month_of_year = new Array('January','February','March','April','May','June',
 //  DECLARE AND INITIALIZE VARIABLES
 
 function ajaxCallback(event){
-  var eventData = JSON.parse(event.target.responseText);
-}
-
-function makeCalendar(){
-
+ // var eventData = JSON.parse(event.target.responseText);
   var Today = new Date();
+
+ // console.log(eventData[0].event_name);
 
   var year = Today.getFullYear();     // Returns year
   var month = Today.getMonth();    // Returns month (0-11)
@@ -116,7 +113,7 @@ function makeCalendar(){
 
   //Create a table DOM 
   var cal = document.createElement("TABLE");    
-  cal.style.width = "100%";
+  cal.style.width = "75%";
   cal.style.height = "400px";
   cal.style.border = "thick solid #0000FF";
   cal.setAttribute("id", "cal");
@@ -146,6 +143,7 @@ function makeCalendar(){
     var x = document.createElement("TD");
     x.style.textAlign = "center";
     x.style.fontSize = "25px";
+    x.style.width = "174px";
     x.style.borderBottom = "medium solid #0000FF";
     x.style.borderTop = "medium solid #0000FF";
     x.appendChild(document.createTextNode("" + day_of_week[index] + ""));
@@ -153,14 +151,16 @@ function makeCalendar(){
   }
 
   var rowThree = document.createElement("TR");
-  rowThree.style.height = "60px";
+  rowThree.style.height = "100px";
+  //rowThree.style.border = "medium solid #0000FF";
   rowThree.setAttribute("id", "0");
   document.getElementById("cal").appendChild(rowThree);
 
   for(index=0; index < Today.getDay(); index++){  //Fill in blank days until we get to today
     var y = document.createElement("TD");
-    y.style.borderBottom = "medium solid #000FF";
-    y.style.borderRight = "medium solid #000FF";
+    y.style.borderBottom = "medium solid #0000FF";
+    y.style.width = "174px"; 
+    y.style.borderRight = "medium solid #0000FF";
     y.appendChild(document.createTextNode(" "));
     document.getElementById("0").appendChild(y);
   }
@@ -183,8 +183,10 @@ function makeCalendar(){
           console.log(row_id.toString());
         }
         var a = document.createElement("TD");
-        a.style.border = "medium solid #000FF";
+        a.style.borderBottom = "medium solid #0000FF";
+        a.style.borderRight = "medium solid #0000FF";
         a.style.textAlign = "right";
+        a.style.width = "174px";
         a.style.verticalAlign = "top";
         a.style.fontSize = "20px";
         a.appendChild(document.createTextNode("" + date + "  "));
@@ -200,13 +202,15 @@ function makeCalendar(){
         console.log("SUN Weekday: " +weekday+ " Date: " +Today.getDate());
         date = Today.getDate();
         var newRow = document.createElement("TR");  //create new row if it's sunday
-        newRow.style.height = "60px";
+        newRow.style.height = "100px";
         newRow.setAttribute("id",row_id.toString());
         document.getElementById("cal").appendChild(newRow);
         
         var b = document.createElement("TD");
-        b.style.border = "medium solid #000FF";
+        b.style.borderRight = "medium solid #0000FF";
+        b.style.borderBottom = "medium solid #0000FF";
         b.style.fontSize = "20px";
+        b.style.width = "174px";
         b.style.textAlign = "right";
         b.style.verticalAlign = "top";
         b.appendChild(document.createTextNode("" + date + ""));
@@ -224,89 +228,7 @@ function makeCalendar(){
 
 }
 
-//Create table variables to make the syntax cleaner
-/*var TR_start = '<TR>';
-var TR_end = '</TR>';
-var highlight_start = '<TD WIDTH="150" HEIGHT="150"><TABLE CELLSPACING=0 BORDER=1 BGCOLOR=DEDEFF BORDERCOLOR=CCCCCC><TR><TD WIDTH=150 HEIGHT=150><B><CENTER>';
-var highlight_end   = '</CENTER></TD></TR></TABLE></B>';
-var TD_start = '<TD WIDTH="150" HEIGHT="150"><CENTER>';
-var TD_end = '</CENTER></TD>';
 
-/* BEGIN CODE FOR CALENDAR
-NOTE: You can format the 'BORDER', 'BGCOLOR', 'CELLPADDING', 'BORDERCOLOR'
-tags to customize your calendar's look.*/
-
-/*cal =  '<TABLE BORDER=1 CELLSPACING=0 CELLPADDING=0 BORDERCOLOR=BBBBBB><TR><TD>';
-cal += '<TABLE BORDER=1 CELLSPACING=0 CELLPADDING=0>' + TR_start;
-cal += '<TD COLSPAN="' + DAYS_OF_WEEK + '" BGCOLOR="#EFEFEF"><FONT SIZE=20><CENTER><B>';
-cal += month_of_year[month]  + '   ' + year + '</FONT></B>' + TD_end + TR_end;
-cal += TR_start;
-
-
-// Shows each day of the week at the top of the calander
-for(index=0; index < DAYS_OF_WEEK; index++){
-
-// Bold Today
-if(weekday == index)
-cal +=  TD_start + '<B>' + day_of_week[index] + '</B>' + TD_end;
-
-// PRINTS DAY
-else
-cal += TD_start + day_of_week[index] + TD_end;
-}
-
-cal += TD_end + TR_end;
-cal += TR_start;
-
-// FILL IN BLANK GAPS UNTIL TODAY'S DAY
-for(index=0; index < Calendar.getDay(); index++)
-cal += TD_start + '  ' + TD_end;
-
-// LOOPS FOR EACH DAY IN CALENDAR
-for(index=0; index < DAYS_OF_MONTH; index++)
-{
-if( Calendar.getDate() > index )
-{
-  // RETURNS THE NEXT DAY TO PRINT
-  week_day =Calendar.getDay();
-
-  // START NEW ROW FOR FIRST DAY OF WEEK
-  if(week_day === 0)
-  cal += TR_start;
-
-  if(week_day != DAYS_OF_WEEK)
-  {
-
-  //we can display events based on the day of the month that they occur
-  
-  // SET VARIABLE INSIDE LOOP FOR INCREMENTING PURPOSES
-  var day  = Calendar.getDate();
-
-  // HIGHLIGHT TODAY'S DATE
-  if( today==Calendar.getDate() )
-  cal += highlight_start + day + highlight_end + TD_end;
-
-  // PRINTS DAY
-  else
-  cal += '<TD WIDTH="100" HEIGHT="100" ALIGN="right"><B>'+ day + TD_end;
-  }
-
-  // END ROW FOR LAST DAY OF WEEK
-  if(week_day == DAYS_OF_WEEK)
-  cal += TR_end;
-}
-
-  // INCREMENTS UNTIL END OF THE MONTH
-  Calendar.setDate(Calendar.getDate()+1);
-
-}// end for loop
-
-cal += '</TD></TR></TABLE></TABLE>';
-
-//  PRINT CALENDAR
-document.write(cal);*/
-
-//  End -->
 
 (function(){
   Date.prototype.deltaDays=function(c){  //returns a Date object c days in the future
@@ -356,7 +278,7 @@ document.write(cal);*/
     };
   }
 
-//document.addEventListener("DOMContentLoaded", fetchCal, false);
+document.addEventListener("DOMContentLoaded", fetchCal, false);
 </script>
 </div>
 

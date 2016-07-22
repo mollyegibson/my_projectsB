@@ -4,7 +4,7 @@ require 'database.php';
 
 //$username = $_SESSION['username'];
 
-$stmt = $mysqli->prepare("select * from events"); //where username=$username");
+$stmt = $mysqli->prepare("select * from events");// where username=$username");
 if(!$stmt){
 	printf("Query Prep Failed: %s\n", $mysqli->error);
 	exit;
@@ -25,9 +25,18 @@ while($row = $result->fetch_assoc()){
 			"event_id" => $row['event_id']
 
 		);
+		//$events[] = $event;
 }
 echo json_encode($events);
 
 $stmt->close();
 
 ?>
+
+<script type="text/javascript">
+
+var eventData = <?php echo json_encode($events, JSON_PRETTY_PRINT) ?>;
+
+console.log(eventData[0].event_name);
+
+</script>
