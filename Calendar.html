@@ -100,8 +100,12 @@ function ajaxCallback(event){
   var Today = new Date();
   console.log(event.target.responseText);
   var eventData = JSON.parse(event.target.responseText);
-  firstEvent = new Date(eventData[0].date);
-  console.log(firstEvent.getDate());
+  console.log(eventData[2].date);
+  for(var i = 0; i < eventData.length; i++) {
+    //var obj = json[i];
+
+    console.log(eventData[i].event_name);
+}
 
 // alert(event.target.responseText.eventData[0].event_name);
 
@@ -174,15 +178,15 @@ function ajaxCallback(event){
 
     if (Today.getDate() > index){
      // var week_day = Today.getDay(); //tells us the current day of the week we're printing
-      var currentWeek = new Week(Today);
+      var currentWeek = new Week(Today); 
       var row_id = "0";
-      var first_sunday = Today.deltaDays(7).getSunday().getDay();
+      var first_sunday = Today.deltaDays(7).getSunday().getDate();
       console.log("First Sunday: " +first_sunday);
     
     //actually if i take getSunday of the first day it'll give zero, so i dont need the (date > 3) if statement at all
     while (weekday!=0){
         date = Today.getDate();
-        if (date > 3){
+        if (date > first_sunday){
           row_id = Today.getSunday().getDate();
         }
         var a = document.createElement("TD");
