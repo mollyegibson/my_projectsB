@@ -1,9 +1,14 @@
 <?php
 require('database.php'); // Includes Database.php
 session_start();
+<<<<<<< HEAD
 //$_SESSION['username'] = $username;
 //$_SESSION['token'] = substr(md5(rand()), 0, 10);
 //$username = $_POST['username'];
+=======
+$username = $_POST['username'];
+$_SESSION['username'] = $username;
+>>>>>>> remotes/origin/master
 ?>
 
 <!DOCTYPE HTML>
@@ -34,7 +39,7 @@ session_start();
 	
 	function fetchCal(){
 		var xmlHttp = new XMLHttpRequest();
-		xmlHttp.open("GET", "getevents.php", true);  //figure out how to pass 'username' into the getevents.php url (getevents.php?username='')
+		xmlHttp.open("POST", "getevents.php", true);  //figure out how to pass 'username' into the getevents.php url (getevents.php?username='')
 		xmlHttp.addEventListener("load", ajaxCallback, false);
 		xmlHttp.send(null);
 	}
@@ -98,7 +103,8 @@ session_start();
     
 
 <div class="calendar">
-<p id="table" align="center"></p>   
+<p id="table" align="center"></p>
+
 <script language="javascript" type="text/javascript">
 var day_of_week = new Array('Sun','Mon','Tue','Wed','Thu','Fri','Sat');
 var month_of_year = new Array('January','February','March','April','May','June','July','August','September','October','November','December');

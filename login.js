@@ -27,6 +27,14 @@ function afterlogin() {
     welcome.textContent = "Welcome " + username; // writes username
     document.getElementById("login").value = "Logout";
 	document.getElementById("login").onclick = logout;
+ 
+	// Make a URL-encoded string for passing POST data:
+	var dataString = "username=" + encodeURIComponent(username);
+ 
+	var xmlHttp = new XMLHttpRequest(); // Initialize our XMLHttpRequest instance
+	xmlHttp.open("POST", "getevents.php", true); // Starting a POST request (NEVER send passwords as GET variables!!!)
+	xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded"); // It's easy to forget this line for POST requests
+	xmlHttp.send(dataString); // Send the data
 	}
 	
 function logout() {
