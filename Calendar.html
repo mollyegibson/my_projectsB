@@ -100,8 +100,9 @@ function ajaxCallback(event){
   var Today = new Date();
   //console.log(event.target.responseText);
   var eventData = JSON.parse(event.target.responseText);
+  console.log(eventData[0].event_name);
 
-
+  var first_sunday = Today.deltaDays(7).getSunday().getDate();
   var year = Today.getFullYear();     // Returns year
   var month = Today.getMonth();   // Returns month (0-11)
   var today = Today.getDate();  // Returns day (1-31)
@@ -168,27 +169,29 @@ function ajaxCallback(event){
 
   for(index=0; index < DAYS_OF_MONTH; index++){
     //var week_day = Today.getDay();
-    for(var i = 0; i < eventData.length; i++) {
-     // eventDateObj = new Date(eventData[i].date);
-    //  console.log(eventDateObj.getDate());
 
-      if (Today.getDate() > index){
-       // var today_string = "" +year+ "-" +month+ "-" +Today.getDate();
-       // console.log(today_string);
-        var currentWeek = new Week(Today); 
-        var row_id = "0";
-        var first_sunday = Today.deltaDays(7).getSunday().getDate();
-        console.log("event: " + eventData[i].date);
+    if (Today.getDate() > index){
+     // var today_string = "" +year+ "-" +month+ "-" +Today.getDate();
+     // console.log(today_string);
+      //var currentWeek = new Week(Today); 
+      var row_id = "0";
       
       //actually if i take getSunday of the first day it'll give zero, so i dont need the (date > 3) if statement at all
-      while (weekday!=0){
+        while (weekday!=0){
+          /*if (Today.getMonth()+1 > 9)
+            var today_string = "" + Today.getFullYear() + "-" + parseInt(Today.getMonth()+1) + "-" + Today.getDate();
+          else */
           var today_string = "" + Today.getFullYear() + "-0" + parseInt(Today.getMonth()+1) + "-" + Today.getDate();
+         // console.log(today_string);
+        //  console.log(eventData[i].date);
           console.log(today_string);
+        //  console.log(eventData[i].date === today_string);
           date = Today.getDate();
           if (date > 3){
             row_id = Today.getSunday().getDate();
           }
           var a = document.createElement("TD");
+          a.addEventListener("click", alertEvent, false);
           a.style.borderBottom = "medium solid #0000FF";
           a.style.borderRight = "medium solid #0000FF";
           a.style.textAlign = "right";
@@ -196,11 +199,17 @@ function ajaxCallback(event){
           a.style.verticalAlign = "top";
           a.style.fontSize = "20px";
           a.appendChild(document.createTextNode("" + date + "  "));
-          if (eventData[i].date === today_string){
-            var cal_event = document.createElement('span');
-            cal_event.style.display = "block";
-            cal_event.appendChild(document.createTextNode("" + eventData[i].event_name + ""));
-            a.appendChild(cal_event);
+          for(var i = 0; i < eventData.length; i++) {
+            if (eventData[i].date === today_string){
+              var cal_event = document.createElement('span');
+              cal_event.style.width = "100%";
+              cal_event.style.height = "50%";
+              cal_event.style.display = "block";
+              cal_event.style.fontSize = "15px";
+              cal_event.style.backgroundColor = "#AED6F1";
+              cal_event.appendChild(document.createTextNode("" + eventData[i].event_name + ""));
+              a.appendChild(cal_event);
+            }
           }
           document.getElementById(row_id.toString()).appendChild(a);
           Today.setDate(Today.getDate()+1);
@@ -209,8 +218,10 @@ function ajaxCallback(event){
         }
 
       if (weekday === 0){
+          /*if (Today.getMonth()+1 > 9)
+            var today_string = "" + Today.getFullYear() + "-" + parseInt(Today.getMonth()+1) + "-" + Today.getDate();
+          else */
           var today_string = "" + Today.getFullYear() + "-0" + parseInt(Today.getMonth()+1) + "-" + Today.getDate();
-          console.log(eventData[i].date === today_string);
           row_id = Today.getSunday().getDate();
           date = Today.getDate();
           var newRow = document.createElement("TR");  //create new row if it's sunday
@@ -219,6 +230,7 @@ function ajaxCallback(event){
           document.getElementById("cal").appendChild(newRow);
           
           var b = document.createElement("TD");
+          b.addEventListener("click", alertEvent, false);
           b.style.borderRight = "medium solid #0000FF";
           b.style.borderBottom = "medium solid #0000FF";
           b.style.fontSize = "20px";
@@ -226,13 +238,23 @@ function ajaxCallback(event){
           b.style.textAlign = "right";
           b.style.verticalAlign = "top";
           b.appendChild(document.createTextNode("" + date + ""));
+          for(var i = 0; i < eventData.length; i++) {
+            if (eventData[i].date === today_string){
+              var cal_event = document.createElement('span');
+              cal_event.style.width = "100%";
+              cal_event.style.height = "50%";
+              cal_event.style.fontSize = "15px";
+              cal_event.appendChild(document.createTextNode("" + eventData[i].event_name + ""));
+              b.appendChild(cal_event);
+            }
+          }
           newRow.appendChild(b);
           Today.setDate(Today.getDate()+1);
           weekday = Today.getDay();
         }
 
 
-     }
+     
     }
    // Today.setDate(Today.getDate()+1);
   }
@@ -251,6 +273,9 @@ function ajaxCallback(event){
   };
 })();
 
+  function alertEvent(){
+    alert("yo!");
+  }
   function Week(c){  //
     this.sunday=c.getSunday();
     this.nextWeek=function(){
