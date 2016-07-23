@@ -1,4 +1,5 @@
 <!DOCTYPE HTML>
+<html>
 <head>
 
 <script type="text/javascript">
@@ -48,16 +49,17 @@ function showdialog()
 <header>
     <ul>
     <li class=logo>Calendar</li>
+    
 <!--login-->
-    <li class =right id="loginbutton" ><input class="login" type="button" value="Sign In / Sign Up" onclick= "showdialog();" /></li>
+    <li class =right><input class="login" type="button" value="Sign In / Sign Up" onclick= "showdialog();" /></li>
     <div id = "mydialog" title="Sign In / Sign Up">
-    <p>Sign In</p>	
+    <p>Sign In</p>  
             
-		<label for="username"></label>
-		<input type="text" name="username" id="username" placeholder="Username"/>
+    <label for="username"></label>
+    <input type="text" name="username" id="username" placeholder="Username"/>
         <br />
         <label for="password"></label>
-		<input type="password" name="password" id="password" placeholder="Password" />
+    <input type="password" name="password" id="password" placeholder="Password" />
         <br />
         <button class ="login" id="login_btn">Sign In</button>
         <script type="text/javascript" src="login.js"></script>
@@ -66,15 +68,15 @@ function showdialog()
     <p>Sign up</p>
         
         <label for="name"></label>
-		<input type="text" name="name" id="name" placeholder="Name"/>
+    <input type="text" name="name" id="name" placeholder="Name"/>
         <br />
 
-		<label for="username"></label>
-		<input type="text" name="username" id="username_signup" placeholder="Username"/>
+    <label for="username"></label>
+    <input type="text" name="username" id="username_signup" placeholder="Username"/>
         <br />
 
         <label for="password"></label>
-		<input type="password" name="password" id="password_signup" placeholder="Password"/>
+    <input type="password" name="password" id="password_signup" placeholder="Password"/>
         <br />
 
         <button class ="login" id="signup_btn">Sign Up</button>
@@ -82,10 +84,8 @@ function showdialog()
 
     </div>
     </ul>
-        <div id = "welcome" class= "welcome"></div>
-
 </header>
-    
+
 
 <div class="calendar">
 <p id="table" align="center"></p>   
@@ -98,8 +98,10 @@ var month_of_year = new Array('January','February','March','April','May','June',
 
 function ajaxCallback(event){
   var Today = new Date();
-  var jsonData = JSON.parse(event.target.responseText);
-  console.log(jsonData[0].event_name);
+  console.log(event.target.responseText);
+  var eventData = JSON.parse(event.target.responseText);
+  firstEvent = new Date(eventData[0].date);
+  console.log(firstEvent.getDate());
 
 // alert(event.target.responseText.eventData[0].event_name);
 
