@@ -98,21 +98,25 @@ var month_of_year = new Array('January','February','March','April','May','June',
 
 function ajaxCallback(event){
   var Today = new Date();
+  console.log("Today: " + Today.getDate());
   //console.log(event.target.responseText);
   var eventData = JSON.parse(event.target.responseText);
   console.log(eventData[0].event_name);
 
   var first_sunday = Today.deltaDays(7).getSunday().getDate();
+  console.log("First Sun: " + first_sunday);
   var year = Today.getFullYear();     // Returns year
   var month = Today.getMonth();   // Returns month (0-11)
   var today = Today.getDate();  // Returns day (1-31)
-  var weekday = Today.getDay();    // Returns day (0-6)
+   // Returns day (0-6)
   currentMonth = new Month(year, month);
   Today.setDate(1);    // Set today to the first day of the month
   Today.setMonth(month); 
+  var weekday = Today.getDay();
+  console.log("Weekday: " +weekday); 
   var DAYS_OF_WEEK = 7;    // "constant" for number of days in a week
   var DAYS_OF_MONTH = 31;    // "constant" for number of days in a month
-
+  console.log("Today should be 1: " + Today.getDate());
   //Create a table DOM 
   var cal = document.createElement("TABLE");    
   cal.style.width = "75%";
@@ -171,22 +175,18 @@ function ajaxCallback(event){
     //var week_day = Today.getDay();
 
     if (Today.getDate() > index){
-     // var today_string = "" +year+ "-" +month+ "-" +Today.getDate();
-     // console.log(today_string);
-      //var currentWeek = new Week(Today); 
+      console.log("Today should still be 1: " + Today.getDate());
       var row_id = "0";
-      
-      //actually if i take getSunday of the first day it'll give zero, so i dont need the (date > 3) if statement at all
+      console.log("WeeeeeeeKDAY: " +weekday);
         while (weekday!=0){
           /*if (Today.getMonth()+1 > 9)
             var today_string = "" + Today.getFullYear() + "-" + parseInt(Today.getMonth()+1) + "-" + Today.getDate();
           else */
           var today_string = "" + Today.getFullYear() + "-0" + parseInt(Today.getMonth()+1) + "-" + Today.getDate();
-         // console.log(today_string);
-        //  console.log(eventData[i].date);
           console.log(today_string);
         //  console.log(eventData[i].date === today_string);
           date = Today.getDate();
+          console.log("Date: " + date);
           if (date > 3){
             row_id = Today.getSunday().getDate();
           }
