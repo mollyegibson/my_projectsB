@@ -7,13 +7,14 @@
 var myDoc = document;
 
 function fetchCal(){
+ // this.today = today;
   var xmlHttp = new XMLHttpRequest();
   xmlHttp.open("GET", "getevents.php", true);  //figure out how to pass 'username' into the getevents.php url (getevents.php?username='')
-  xmlHttp.addEventListener("load", thisMonth, false);
+  xmlHttp.addEventListener("load", ajaxCallback, false);
   xmlHttp.send(null);
 }
 
-function prevOne(){
+/*function prevOne(){
   var xmlHttp = new XMLHttpRequest();
   xmlHttp.open("GET", "getevents.php", true);  //figure out how to pass 'username' into the getevents.php url (getevents.php?username='')
   xmlHttp.addEventListener("load", previousMonth, false);
@@ -25,7 +26,7 @@ function nextUp(){
   xmlHttp.open("GET", "getevents.php", true);  //figure out how to pass 'username' into the getevents.php url (getevents.php?username='')
   xmlHttp.addEventListener("load", upcomingMonth, false);
   xmlHttp.send(null);
-}
+}*/
 
 </script>
 <style>
@@ -107,32 +108,23 @@ function showdialog()
 var day_of_week = new Array('Sun','Mon','Tue','Wed','Thu','Fri','Sat');
 var month_of_year = new Array('January','February','March','April','May','June','July','August','September','October','November','December');
 
+var Today = new Date();
+var year = parseInt(Today.getFullYear());     // Returns year
+var month = parseInt(Today.getMonth());   // Returns month (0-11)
+var today = parseInt(Today.getDate());  // Returns day (1-31)
+var currentMonth = new Month(year, month);
+   // Set today to the first day of the month
 
-//  DECLARE AND INITIALIZE VARIABLES
+var DAYS_OF_WEEK = 7;    // "constant" for number of days in a week
+var DAYS_OF_MONTH = 31;    // "constant" for number of days in a month
 
+function ajaxCallback(event){
 
-function thisMonth(event){
-  var Today = new Date();
-  ajaxCallback(event, Today);
-}
-
-
-function ajaxCallback(event, startdate){
-  var Today = startdate;
-  //console.log(event.target.responseText);
+  Today.setMonth(currentMonth.month);
+  Today.setDate(1); 
   var eventData = JSON.parse(event.target.responseText);
-  var year = parseInt(Today.getFullYear());     // Returns year
-  var month = parseInt(Today.getMonth());   // Returns month (0-11)
-  var today = parseInt(Today.getDate());  // Returns day (1-31)
-  currentMonth = new Month(year, month);
-  Today.setDate(1);    // Set today to the first day of the month
-  Today.setMonth(month); 
   var first_sunday = Today.deltaDays(7).getSunday().getDate();
   var weekday = Today.getDay();
-  var DAYS_OF_WEEK = 7;    // "constant" for number of days in a week
-  var DAYS_OF_MONTH = 31;    // "constant" for number of days in a month
-
-
 
   //Create a table DOM 
   var cal = document.createElement("TABLE");    
@@ -157,7 +149,8 @@ function ajaxCallback(event, startdate){
   prev.style.borderLeft = "15px solid white";
   prev.style.borderBottom = "15px solid white";
   prev.style.borderRight = "15px solid #800000";
-  prev.addEventListener("click", prevOne, false);
+  prev.addEventListener("click", previousMonth, false);
+  console.log("Current month: " +currentMonth.month);
   topL.appendChild(prev);
   firstRow.appendChild(topL);
 
@@ -167,7 +160,7 @@ function ajaxCallback(event, startdate){
   top.style.fontSize = "35px";
   top.setAttribute("id", "top");
   top.setAttribute("colspan", "5"); 
-  top.appendChild(document.createTextNode("" +month_of_year[month]+ " " +year+ ""));
+  top.appendChild(document.createTextNode("" +month_of_year[currentMonth.month]+ " " +year+ ""));
   document.getElementById("firstrow").appendChild(top);
 
   var topR = document.createElement("TD");
@@ -182,7 +175,7 @@ function ajaxCallback(event, startdate){
   next.style.borderLeft = "15px solid #800000";
   next.style.borderBottom = "15px solid white";
   next.style.borderRight = "15px solid white";
-  next.addEventListener("click", nextUp, false);
+  next.addEventListener("click", upcomingMonth, false);
   topR.appendChild(next);
   firstRow.appendChild(topR);
 
@@ -297,6 +290,7 @@ function ajaxCallback(event, startdate){
           newRow.appendChild(b);
           Today.setDate(Today.getDate()+1);
           weekday = Today.getDay();
+          if (Today.getDate() === 1){break;}
         }
 
 
@@ -306,23 +300,22 @@ function ajaxCallback(event, startdate){
   }
 
 }
-function upcomingMonth(event){
+
+function upcomingMonth(){
   var myNode = document.getElementById("table");
-  while (myNode.firstChild){
-    myNode.removeChild(myNode.firstChild);}
-  var Today = new Date();
-  var currentMonth = new Month(Today.getFullYear(), Today.getMonth());
+  while (myNode.firstChild){ myNode.removeChild(myNode.firstChild);}  //Delete the current calendar
+  currentMonth = new Month(Today.getFullYear(), Today.getMonth());  //Move the current month up one
   Today.setMonth(currentMonth.nextMonth().month);
-  ajaxCallback(event, Today);
+  fetchCal();
   }
-function previousMonth(event){
-  var Today = new Date();
+
+function previousMonth(){
   var myNode = document.getElementById("table");
-  while (myNode.firstChild){
-    myNode.removeChild(myNode.firstChild);}
-  var currentMonth = new Month(Today.getFullYear(), Today.getMonth());
+  while (myNode.firstChild){ myNode.removeChild(myNode.firstChild);}
+  currentMonth.month = currentMonth.prevMonth().month;
   Today.setMonth(currentMonth.prevMonth().month);
-  ajaxCallback(event, Today);
+  console.log("Prev: " + currentMonth.month);
+  fetchCal();
   }
 
 
@@ -389,6 +382,7 @@ function previousMonth(event){
     };
   }
 
+//var Today = new Date();
 document.addEventListener("DOMContentLoaded", fetchCal, false);
 </script>
 </div>
