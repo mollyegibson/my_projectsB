@@ -170,4 +170,29 @@ li.menu a:hover {
 	
 }
 
+/*FOR NEXT/PREV MONTH BUTTONS:*/
+
+
+.arrow-right {
+  width: 0; 
+  height: 0; 
+  content: '';
+  display: block;
+  border-top: 40px solid transparent;
+  border-bottom: 40px solid transparent;
+  border-right: 40px solid transparent;
+  border-left: 40px solid #800000;
+}
+
+.arrow-left {
+  width: 0; 
+  height: 0; 
+  content: '';
+  display: block;
+  border-top: 40px solid transparent;
+  border-bottom: 40px solid transparent; 
+  border-left: 40px solid transparent;
+  border-right:40px solid #800000; 
+}
+
 

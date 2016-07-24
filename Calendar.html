@@ -9,7 +9,21 @@ var myDoc = document;
 function fetchCal(){
   var xmlHttp = new XMLHttpRequest();
   xmlHttp.open("GET", "getevents.php", true);  //figure out how to pass 'username' into the getevents.php url (getevents.php?username='')
-  xmlHttp.addEventListener("load", ajaxCallback, false);
+  xmlHttp.addEventListener("load", thisMonth, false);
+  xmlHttp.send(null);
+}
+
+function prevOne(){
+  var xmlHttp = new XMLHttpRequest();
+  xmlHttp.open("GET", "getevents.php", true);  //figure out how to pass 'username' into the getevents.php url (getevents.php?username='')
+  xmlHttp.addEventListener("load", previousMonth, false);
+  xmlHttp.send(null);
+}
+
+function nextUp(){
+  var xmlHttp = new XMLHttpRequest();
+  xmlHttp.open("GET", "getevents.php", true);  //figure out how to pass 'username' into the getevents.php url (getevents.php?username='')
+  xmlHttp.addEventListener("load", upcomingMonth, false);
   xmlHttp.send(null);
 }
 
@@ -96,27 +110,30 @@ var month_of_year = new Array('January','February','March','April','May','June',
 
 //  DECLARE AND INITIALIZE VARIABLES
 
-function ajaxCallback(event){
+
+function thisMonth(event){
   var Today = new Date();
-  console.log("Today: " + Today.getDate());
+  ajaxCallback(event, Today);
+}
+
+
+function ajaxCallback(event, startdate){
+  var Today = startdate;
   //console.log(event.target.responseText);
   var eventData = JSON.parse(event.target.responseText);
-  console.log(eventData[0].event_name);
-
-  var first_sunday = Today.deltaDays(7).getSunday().getDate();
-  console.log("First Sun: " + first_sunday);
-  var year = Today.getFullYear();     // Returns year
-  var month = Today.getMonth();   // Returns month (0-11)
-  var today = Today.getDate();  // Returns day (1-31)
-   // Returns day (0-6)
+  var year = parseInt(Today.getFullYear());     // Returns year
+  var month = parseInt(Today.getMonth());   // Returns month (0-11)
+  var today = parseInt(Today.getDate());  // Returns day (1-31)
   currentMonth = new Month(year, month);
   Today.setDate(1);    // Set today to the first day of the month
   Today.setMonth(month); 
+  var first_sunday = Today.deltaDays(7).getSunday().getDate();
   var weekday = Today.getDay();
-  console.log("Weekday: " +weekday); 
   var DAYS_OF_WEEK = 7;    // "constant" for number of days in a week
   var DAYS_OF_MONTH = 31;    // "constant" for number of days in a month
-  console.log("Today should be 1: " + Today.getDate());
+
+
+
   //Create a table DOM 
   var cal = document.createElement("TABLE");    
   cal.style.width = "75%";
@@ -129,15 +146,45 @@ function ajaxCallback(event){
   firstRow.setAttribute("id", "firstrow");
   document.getElementById("cal").appendChild(firstRow);
 
+  var topL = document.createElement("TD");
+  topL.style.height = "40px";
+  topL.setAttribute("id", "topL");
+  topL.setAttribute("colspan", "1");
+  var prev = document.createElement("p");
+  prev.style.width = "0px";
+  prev.style.height = "0px";
+  prev.style.borderTop = "15px solid white";
+  prev.style.borderLeft = "15px solid white";
+  prev.style.borderBottom = "15px solid white";
+  prev.style.borderRight = "15px solid #800000";
+  prev.addEventListener("click", prevOne, false);
+  topL.appendChild(prev);
+  firstRow.appendChild(topL);
+
   var top = document.createElement("TD");
-  top.style.width = "100%";
   top.style.height = "40px";
   top.style.textAlign = "center";
   top.style.fontSize = "35px";
   top.setAttribute("id", "top");
-  top.setAttribute("colspan", "7"); 
+  top.setAttribute("colspan", "5"); 
   top.appendChild(document.createTextNode("" +month_of_year[month]+ " " +year+ ""));
   document.getElementById("firstrow").appendChild(top);
+
+  var topR = document.createElement("TD");
+  topR.style.height = "40px";
+  topR.setAttribute("id", "topL");
+  topR.setAttribute("colspan", "1");
+  var next = document.createElement("p");
+  next.style.width = "0px";
+  next.style.position = "relative";
+  next.style.left = "50px";
+  next.style.borderTop = "15px solid white";
+  next.style.borderLeft = "15px solid #800000";
+  next.style.borderBottom = "15px solid white";
+  next.style.borderRight = "15px solid white";
+  next.addEventListener("click", nextUp, false);
+  topR.appendChild(next);
+  firstRow.appendChild(topR);
 
   var secondRow = document.createElement("TR");
   secondRow.style.height = "70px";
@@ -171,25 +218,24 @@ function ajaxCallback(event){
     document.getElementById("0").appendChild(y);
   }
 
-  for(index=0; index < DAYS_OF_MONTH; index++){
-    //var week_day = Today.getDay();
+  for(index=0; index < 6; index++){ //six iterations bc that's the max number of weeks that a month can span
+
 
     if (Today.getDate() > index){
-      console.log("Today should still be 1: " + Today.getDate());
-      var row_id = "0";
-      console.log("WeeeeeeeKDAY: " +weekday);
+        var row_id = "0";
+        
         while (weekday!=0){
-          /*if (Today.getMonth()+1 > 9)
+          if (Today.getMonth()+1 > 9)
             var today_string = "" + Today.getFullYear() + "-" + parseInt(Today.getMonth()+1) + "-" + Today.getDate();
-          else */
+          else 
           var today_string = "" + Today.getFullYear() + "-0" + parseInt(Today.getMonth()+1) + "-" + Today.getDate();
-          console.log(today_string);
-        //  console.log(eventData[i].date === today_string);
           date = Today.getDate();
           console.log("Date: " + date);
-          if (date > 3){
+          console.log("Index: " + index);
+          if (date > first_sunday){
             row_id = Today.getSunday().getDate();
           }
+
           var a = document.createElement("TD");
           a.addEventListener("click", alertEvent, false);
           a.style.borderBottom = "medium solid #0000FF";
@@ -214,14 +260,14 @@ function ajaxCallback(event){
           document.getElementById(row_id.toString()).appendChild(a);
           Today.setDate(Today.getDate()+1);
           weekday = Today.getDay();
-
+          if (Today.getDate() === 1){break;}
         }
 
       if (weekday === 0){
-          /*if (Today.getMonth()+1 > 9)
+          if (Today.getMonth()+1 > 9)
             var today_string = "" + Today.getFullYear() + "-" + parseInt(Today.getMonth()+1) + "-" + Today.getDate();
-          else */
-          var today_string = "" + Today.getFullYear() + "-0" + parseInt(Today.getMonth()+1) + "-" + Today.getDate();
+          else 
+            var today_string = "" + Today.getFullYear() + "-0" + parseInt(Today.getMonth()+1) + "-" + Today.getDate();
           row_id = Today.getSunday().getDate();
           date = Today.getDate();
           var newRow = document.createElement("TR");  //create new row if it's sunday
@@ -260,6 +306,24 @@ function ajaxCallback(event){
   }
 
 }
+function upcomingMonth(event){
+  var myNode = document.getElementById("table");
+  while (myNode.firstChild){
+    myNode.removeChild(myNode.firstChild);}
+  var Today = new Date();
+  var currentMonth = new Month(Today.getFullYear(), Today.getMonth());
+  Today.setMonth(currentMonth.nextMonth().month);
+  ajaxCallback(event, Today);
+  }
+function previousMonth(event){
+  var Today = new Date();
+  var myNode = document.getElementById("table");
+  while (myNode.firstChild){
+    myNode.removeChild(myNode.firstChild);}
+  var currentMonth = new Month(Today.getFullYear(), Today.getMonth());
+  Today.setMonth(currentMonth.prevMonth().month);
+  ajaxCallback(event, Today);
+  }
 
 
 
@@ -273,6 +337,17 @@ function ajaxCallback(event){
   };
 })();
 
+
+ /* function updateCalendar(){
+    var Today = new Date();
+    Today.setMonth(Today.getMonth()+1);
+    console.log("New month: " + Today.setMonth(Today.getMonth()+1));
+    var myNode = document.getElementById("cal");
+    while (myNode.firstChild){
+      myNode.removeChild(myNode.firstChild);
+    }
+    fetchCal(Today);
+  }*/
   function alertEvent(){
     alert("yo!");
   }
