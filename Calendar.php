@@ -6,9 +6,13 @@ $_SESSION['username'] = $username;
 ?>
 
 <!DOCTYPE HTML>
+<html>
 <head>
     <style>
         #mydialog { display:none }
+		#addeventdialog { display:none }
+        #deleteeventdialog { display:none }
+
     </style>
     
     <title> Calendar </title>
@@ -41,6 +45,16 @@ $_SESSION['username'] = $username;
     function showdialog()
     {
       $("#mydialog").dialog();
+    }
+	
+	 function addeventdialog()
+    {
+      $("#addeventdialog").dialog();
+    }
+	
+	 function deleteeventdialog()
+    {
+      $("#deleteeventdialog").dialog();
     }
 	
 	function logout() {
@@ -88,15 +102,61 @@ $_SESSION['username'] = $username;
 
         <button class ="login" id="signup_btn">Sign Up</button>
         <script type="text/javascript" src="signup.js"></script>
-
     </div>
+
     </ul>
         <div id = "welcome" class= "welcome"></div>
 
 </header>
     
+<ul>
+	<div id = addingevents>
+    <li class =right id="add" ><input class="add" type="button" value="Add event" id="addEvent" onclick= "addeventdialog();" /></li>
+    <div id = "addeventdialog" title="Add Events">
+    <p>Add Events</p>	
+        
+		<input type="hidden" name="usernameadd" id="usernameadd" value ="<?php
+require('database.php'); // Includes Database.php
+session_start();
+$username = $_POST['username'];
+$_SESSION['username'] = $username;
+echo $username;
+?>"/>
+    
+		<label for="Event name"></label>
+		<input type="text" name="eventname" id="eventname" placeholder="Event Name"/>
+        <br />
+        <label for="Date"></label>
+		<input type="date" name="date" id="date" placeholder="Date" />
+        <br />
+		<label for="Time"></label>
+		<input type="time" name="time" id="time" placeholder="Time"/>
+        <br />
+        <label for="Tag"></label>
+		<input type="text" name="tag" id="tag" placeholder="Tag" />
+        <br />
+		<label for="Group"></label>
+		<input type="text" name="group" id="group" placeholder="Group" />
+        <br />
+        <button class ="login" id="addevent_btn">Add Event</button>
+        <script type="text/javascript" src="addingevents.js"></script>
+    </div>
+	</div>
+	
+	<li class =right id="delete" ><input class="delete" type="button" value="Delete event" id="deleteEvent" onclick= "deleteeventdialog();" /></li>
+    <div id = "deleteeventdialog" title="Delete Events">
+    <p>Delete Events</p>	
+            
 
-<div class="calendar">
+        <button class ="login" id="delte_btn">Delete</button>
+        <script type="text/javascript" src="deleteevent.js"></script>
+    </div>
+</ul>
+	
+	
+	
+
+<div class="calendar" id="calendar">
 <p id="table" align="center"></p>
 
 <script language="javascript" type="text/javascript">
@@ -108,20 +168,26 @@ var month_of_year = new Array('January','February','March','April','May','June',
 
 function ajaxCallback(event){
   var Today = new Date();
-  var jsonData = JSON.parse(event.target.responseText);
-  console.log(jsonData[0].event_name);
+  console.log("Today: " + Today.getDate());
+  //console.log(event.target.responseText);
+  var eventData = JSON.parse(event.target.responseText);
+  console.log(eventData[0].event_name);
+  
 
-// alert(event.target.responseText.eventData[0].event_name);
-
+  var first_sunday = Today.deltaDays(7).getSunday().getDate();
+  console.log("First Sun: " + first_sunday);
   var year = Today.getFullYear();     // Returns year
   var month = Today.getMonth();    // Returns month (0-11)
   var today = Today.getDate();    // Returns day (1-31)
-  var weekday = Today.getDay();    // Returns day (0-6)
+  // Returns day (0-6)
   currentMonth = new Month(year, month);
   Today.setDate(1);    // Set today to the first day of the month
-  Today.setMonth(month); 
+  Today.setMonth(month);
+  var weekday = Today.getDay();
+  console.log("Weekday: " +weekday);
   var DAYS_OF_WEEK = 7;    // "constant" for number of days in a week
   var DAYS_OF_MONTH = 31;    // "constant" for number of days in a month
+console.log("Today should be 1: " + Today.getDate());
 
   //Create a table DOM 
   var cal = document.createElement("TABLE");    
@@ -180,63 +246,93 @@ function ajaxCallback(event){
   for(index=0; index < DAYS_OF_MONTH; index++){
     //var week_day = Today.getDay();
 
-    if (Today.getDate() > index){
-     // var week_day = Today.getDay(); //tells us the current day of the week we're printing
-      var currentWeek = new Week(Today);
-      var row_id = "0";
-      var first_sunday = Today.deltaDays(7).getSunday().getDay();
-      console.log("First Sunday: " +first_sunday);
-    
-    //actually if i take getSunday of the first day it'll give zero, so i dont need the (date > 3) if statement at all
-    while (weekday!=0){
-        date = Today.getDate();
-        if (date > 3){
-          row_id = Today.getSunday().getDate();
-        }
-        var a = document.createElement("TD");
-        a.style.borderBottom = "medium solid #0000FF";
-        a.style.borderRight = "medium solid #0000FF";
-        a.style.textAlign = "right";
-        a.style.width = "174px";
-        a.style.verticalAlign = "top";
-        a.style.fontSize = "20px";
-        a.appendChild(document.createTextNode("" + date + "  "));
-        document.getElementById(row_id.toString()).appendChild(a);
-        Today.setDate(Today.getDate()+1);
-        weekday = Today.getDay();
-      }
+       if (Today.getDate() > index){
 
-    if (weekday === 0){
-        row_id = Today.getSunday().getDate();
-        date = Today.getDate();
-        var newRow = document.createElement("TR");  //create new row if it's sunday
-        newRow.style.height = "100px";
-        newRow.setAttribute("id",row_id.toString());
-        document.getElementById("cal").appendChild(newRow);
-        
-        var b = document.createElement("TD");
-        b.style.borderRight = "medium solid #0000FF";
-        b.style.borderBottom = "medium solid #0000FF";
-        b.style.fontSize = "20px";
-        b.style.width = "174px";
-        b.style.textAlign = "right";
-        b.style.verticalAlign = "top";
-        b.appendChild(document.createTextNode("" + date + ""));
-        newRow.appendChild(b);
-        Today.setDate(Today.getDate()+1);
-        weekday = Today.getDay();
-      }
+		console.log("Today should still be 1: " + Today.getDate());
+        var row_id = "0";
+      
+console.log("WeeeeeeeKDAY: " +weekday);
+
+while (weekday !== 0){
+          var today_string = "" + Today.getFullYear() + "-0" + parseInt(Today.getMonth()+1) + "-" + Today.getDate();
+          console.log(today_string);
+          date = Today.getDate();
+		  console.log("Date: " + date);
+          if (date > 3){
+            row_id = Today.getSunday().getDate();
+          }
+          var a = document.createElement("TD");
+          a.style.borderBottom = "medium solid #0000FF";
+          a.style.borderRight = "medium solid #0000FF";
+          a.style.textAlign = "right";
+          a.style.width = "174px";
+		  a.addEventListener("click", alertEvent, false);
+          a.style.verticalAlign = "top";
+          a.style.fontSize = "20px";
+          a.appendChild(document.createTextNode("" + date + "  "));
+		for(var i = 0; i < eventData.length; i++) {
+          if (eventData[i].date === today_string){
+            var cal_event = document.createElement('span');
+            cal_event.style.width = "100%";
+            cal_event.style.height = "50%";
+            cal_event.style.display = "block";
+            cal_event.style.fontSize = "15px";
+            cal_event.style.backgroundColor = "#AED6F1";
+            cal_event.appendChild(document.createTextNode("" + eventData[i].event_name + ""));
+            a.appendChild(cal_event);
+          }
+		}
+          document.getElementById(row_id.toString()).appendChild(a);
+          Today.setDate(Today.getDate()+1);
+          weekday = Today.getDay();
+	  }
+	  
+if (weekday === 0){
+          var today_string = "" + Today.getFullYear() + "-0" + parseInt(Today.getMonth()+1) + "-" + Today.getDate();
+          row_id = Today.getSunday().getDate();
+          date = Today.getDate();
+          var newRow = document.createElement("TR");  //create new row if it's sunday
+          newRow.style.height = "100px";
+          newRow.setAttribute("id",row_id.toString());
+          document.getElementById("cal").appendChild(newRow);
+          
+		  var b = document.createElement("TD");
+          b.addEventListener("click", alertEvent, false);
+          b.style.borderRight = "medium solid #0000FF";
+          b.style.borderBottom = "medium solid #0000FF";
+          b.style.fontSize = "20px";
+          b.style.width = "174px";
+          b.style.textAlign = "right";
+          b.style.verticalAlign = "top";
+          b.appendChild(document.createTextNode("" + date + ""));
+         
+		  for(var i = 0; i < eventData.length; i++) {
+            if (eventData[i].date === today_string){
+              var cal_event = document.createElement('span');
+              cal_event.style.width = "100%";
+              cal_event.style.height = "50%";
+              cal_event.style.fontSize = "15px";
+              cal_event.appendChild(document.createTextNode("" + eventData[i].event_name + ""));
+              b.appendChild(cal_event);
+            }
+          }
+          newRow.appendChild(b);
+          Today.setDate(Today.getDate()+1);
+          weekday = Today.getDay();
+        }
 
 
      
     }
-
    // Today.setDate(Today.getDate()+1);
   }
 
 }
 
 
+  function alertEvent(){
+    alert("yo!");
+  }
 
 (function(){
   Date.prototype.deltaDays=function(c){  //returns a Date object c days in the future
@@ -248,6 +344,7 @@ function ajaxCallback(event){
   };
 })();
 
+  
   function Week(c){  //
     this.sunday=c.getSunday();
     this.nextWeek=function(){

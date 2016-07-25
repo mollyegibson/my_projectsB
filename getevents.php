@@ -5,7 +5,8 @@ require 'database.php';
 $username = $_POST['username'];
 $username = $_SESSION['username'];
 
-$stmt = $mysqli->prepare("select * from Calendar");
+
+$stmt = $mysqli->prepare("select * from Calendar ORDER BY date");
 if(!$stmt){
 	printf("Query Prep Failed: %s\n", $mysqli->error);
 	exit;
@@ -31,6 +32,7 @@ while($row = $result->fetch_assoc()){
 echo json_encode($events);
 
 $stmt->close();
+
 
 ?>
 

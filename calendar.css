@@ -62,6 +62,43 @@ li.right {
     color: white;
 }
 
+.add {
+    border: 1px solid #808080;
+	background-color: white;
+    color: #808080;
+    padding: 10px 17px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+	-webkit-transition-duration: 0.4s; 
+    transition-duration: 0.4s;
+}
+
+.add:hover {
+	background-color:#808080;
+    color: white;
+}
+
+.delete {
+    border: 1px solid #808080;
+	background-color: white;
+    color: #808080;
+    padding: 10px 17px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+	-webkit-transition-duration: 0.4s; 
+    transition-duration: 0.4s;
+}
+
+.delete:hover {
+	background-color:#808080;
+    color: white;
+}
+
+
 .calendar {
 	float: right;
 	padding-top: 40px;
