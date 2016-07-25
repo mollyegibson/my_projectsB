@@ -1,7 +1,7 @@
 <?php
 
 require('database.php');
-$error='';
+		$error='';
 		$event_name = $_POST['eventname'];
 		$date = $_POST['date'];
 		$username = $_POST['username'];//username input

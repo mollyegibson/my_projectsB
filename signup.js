@@ -23,11 +23,11 @@ function signupAjax(event){
 var signup = document.getElementById("signup_btn");
 document.addEventListener('DOMContentLoaded', function () {
     signup.addEventListener('click', signupAjax, false);
-});  // Bind the AJAX call to button click
+}, false);  // Bind the AJAX call to button click
 	
-document.getElementById("password_signup").addEventListener("keyup", function(event) {
+/*document.getElementById("password_signup").addEventListener("keyup", function(event) {
     event.preventDefault();
     if (event.keyCode == 13) {
         document.getElementById("signup_btn").click();
     }
-});
+});*/

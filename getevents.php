@@ -2,13 +2,15 @@
 session_start();
 require 'database.php';
 
-//$username = $_SESSION['username'];
+$username = $_SESSION['username'];
 
-$stmt = $mysqli->prepare("select * from events ORDER BY date");// where username=$username");
+$stmt = $mysqli->prepare("select * from events ORDER BY date"); //WHERE username=?");
 if(!$stmt){
 	printf("Query Prep Failed: %s\n", $mysqli->error);
 	exit;
 }
+
+//$stmt->bind_param('s', $username);
 
 $stmt->execute();
  

@@ -1,10 +1,10 @@
 <?php
 require('database.php');
+include 'ChromePhp.php';
 
 header("Content-Type: application/json"); // Since we are sending a JSON response here (not an HTML document), set the MIME Type to application/json
  
 $username = $_POST['username'];
-$password = $_POST['password'];
  
 // Check to see if the username and password are valid.  (You learned how to do this in Module 3.)
 
@@ -19,6 +19,8 @@ $password = $_POST['password'];
 	// Bind the results
 	$stmt->bind_result($cnt, $username, $pwd_hash);
 	$stmt->fetch();
+    ChromePhp::log(crypt($pwd_guess,$pwd_hash));
+    ChromePhp::log($pwd_hash);
  
 	// Compare the submitted password to the actual password hash
         if( $cnt == 1 && crypt($pwd_guess, $pwd_hash)==$pwd_hash){
