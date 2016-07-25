@@ -1,43 +1,62 @@
 <?php
+session_start();
+$username = $_SESSION['username'];
 
 require('database.php');
 		$error='';
 		$event_name = $_POST['eventname'];
 		$date = $_POST['date'];
 		$username = $_POST['username'];//username input
-		$tag = $_POST['tag'];
-		$groups = $_POST['groups'];
+		$time = $_POST['time'];
+		//$tag = $_POST['tag'];
+		//$groups = $_POST['groups'];
 		
-session_start();
-$_SESSION['username'] = $username; 
+
+
  
 if($mysqli->connect_error) {
 	printf("Connection Failed: %s\n", $mysqli->connect_error);
-	exit;
+
+	echo json_encode(array(
+		"success1" => false));
+		exit;
 }
 
-if(isset($_POST['submit'])) {
 	if (empty($_POST['event_name']) || $username == null) {
-		$error = "error: try again";
-        echo $error;
+
+		echo json_encode(array(
+		"success2" => false));
+        exit;
+
+
 	}
 	else {
+	
 
-        $stmt = $mysqli->prepare("insert into Calendar (event_name, date, username, tag, groups) values (?, ?, ?, ?, ?)");
+
+        $stmt = $mysqli->prepare("insert into events (event_name, date, username, time) values (?, ?, ?, ?)");
         if(!$stmt){
             printf("Query Prep Failed: %s\n", $mysqli->error);
+
+          echo json_encode(array(
+        	"success3" => false,
+        	"message" => ": Error"
+            ));
             exit;
         }
  
-        $stmt->bind_param('sssss', $event_name, $date, $username, $tag, $groups);
+        $stmt->bind_param('ssss', $event_name, $date, $username, $time);
  
         $stmt->execute();
  
         $stmt->close();
-		
-		echo $event_name, $date, $username, $tag, $groups;
-        echo "successful!";
-		exit; // Redirect to login page
+	
+		echo json_encode(array(
+		"success" => true ));
+		exit;
+
+
     }
-}
+
+
 ?>

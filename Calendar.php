@@ -1,4 +1,5 @@
 <?php
+//ini_set("session.cookie_httponly", 1);
 session_start();
 require 'database.php';
 
@@ -10,22 +11,44 @@ if (isset($_SESSION['username'])){
 <!DOCTYPE HTML>
 <html>
 <head>
-
 <script type="text/javascript">
 
 var myDoc = document;
 
 function fetchCal(){
  // this.today = today;
-  //var username = String(<?php echo "$username"; ?>);  //WHY WONT THIS WORK AGH
- // console.log(username);
+ var username = "";
+// username = "<?php echo $_SESSION['username']; ?>";
 
+  console.log(username);  
   var xmlHttp = new XMLHttpRequest();
-  xmlHttp.open("GET", "getevents.php", true);  //figure out how to pass 'username' into the getevents.php url (getevents.php?username='')
-  //xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+  xmlHttp.open("POST", "getevents.php", true);  //figure out how to pass 'username' into the getevents.php url (getevents.php?username='')
+  xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
   xmlHttp.addEventListener("load", ajaxCallback, false);
-  xmlHttp.send(null);
+  xmlHttp.send("username=username");
 }
+
+function showdialog()
+    {
+      $("#mydialog").dialog();
+    }
+  
+   function addeventdialog()
+    {
+      $("#addeventdialog").dialog();
+    }
+  
+   function deleteeventdialog()
+    {
+      $("#deleteeventdialog").dialog();
+    }
+
+    function logout() {
+    var xmlHttp = new XMLHttpRequest(); // Initialize our XMLHttpRequest instance
+    xmlHttp.open("POST", "logout.php", true); // Starting a POST request (NEVER send passwords as GET variables!!!)
+    window.location.reload();
+    }
+
 
 
 </script>
@@ -64,9 +87,8 @@ function showdialog()
 <header>
     <ul>
     <li class=logo>Calendar</li>
-    
 <!--login-->
-    <li class =right><input class="login" type="button" value="Sign In / Sign Up" onclick= "showdialog();" /></li>
+    <li class =right id="loginbutton" ><input class="login" type="button" value="Sign In / Sign Up" id="login" onclick= "showdialog();" /></li>
     <div id = "mydialog" title="Sign In / Sign Up">
     <p>Sign In</p>  
             
@@ -96,10 +118,271 @@ function showdialog()
 
         <button class ="login" id="signup_btn">Sign Up</button>
         <script type="text/javascript" src="signup.js"></script>
-
     </div>
+
     </ul>
+        <div id = "welcome" class= "welcome"></div>
+
 </header>
+    
+<ul>
+  <div id = "addingevents">
+    <li class =right id="add" ><input class="add" type="button" value="Add event" id="addEvent" onclick= "addeventdialog();" /></li>
+    <div id = "addeventdialog" title="Add Events">
+    <p>Add Events</p> 
+        
+    <input type="hidden" name="usernameadd" id="usernameadd" value ="<?php
+      require('database.php'); // Includes Database.php
+      session_start();
+      $username = $_POST['username'];
+      $_SESSION['username'] = $username;
+      echo $username;
+      ?>"/>
+    
+    <label for="Event name"></label>
+    <input type="text" name="eventname" id="eventname" placeholder="Event Name"/>
+        <br />
+        <label for="Date"></label>
+    <input type="date" name="date" id="date" placeholder="Date" />
+        <br />
+    <label for="Time"></label>
+    <input type="time" name="time" id="time" placeholder="Time"/>
+        <br />
+    
+        <label for="Tag"></label>
+    <h4>Tag:*</h4>
+    <select id="tags">
+    <option value = "meeting">Meeting</option>
+    <option value = "work">Work</option>
+    <option value = "home">Home</option>
+    <option value = "school">School</option>
+
+    </select>
+    
+        <br />
+    
+    <label for="Group"></label>
+    <h4>Group:*</h4>
+    <select id="group">
+    <option value = "group1">Group 1</option>
+    <option value = "group2">Group 2</option>
+    <option value = "group3">Group 3</option>
+    </select>
+        <br />
+        <button class ="login" id="addevent_btn">Add Event</button>
+        <script type="text/javascript" src="addingevents.js"></script>
+    </div>
+  
+  
+  <!--<div id = "editingevents">
+    <!--<li class =right id="edit" ><input class="edit" type="button" value="Edit event" id="editEvent" onclick= "editeventdialog();" /></li>-->
+    <!--<div id = "editeventdialog" title="Edit Events">
+    <p>Edit Events</p>  
+        
+    <input type="hidden" name="usernameadd" id="usernameadd" value ="<?php
+      //require('database.php'); // Includes Database.php
+    //  session_start();
+     // $username = $_POST['username'];
+   //   $_SESSION['username'] = $username;
+  //    echo $username;
+      ?>"/>
+    <input type="int" name="id" id="editid" placeholder="Enter event_id"/>
+    
+    <label for="Event name"></label>
+    <input type="text" name="eventname" id="editname" placeholder="Event Name"/>
+        <br />
+        <label for="Date"></label>
+    <input type="date" name="date" id="editdate" placeholder="Date" />
+        <br />
+    <label for="Time"></label>
+    <input type="time" name="time" id="edittime" placeholder="Time"/>
+        <br />
+    
+        <label for="Tag"></label>
+    <h4>Tag:*</h4>
+    <select id="edittags">
+    <option value = "meeting">Meeting</option>
+    <option value = "work">Work</option>
+    <option value = "home">Home</option>
+    <option value = "school">School</option>
+
+    </select>
+    
+        <br />
+    
+    <label for="Group"></label>
+    <h4>Group:*</h4>
+    <select id="editgroup">
+    <option value = "group1">Group 1</option>
+    <option value = "group2">Group 2</option>
+    <option value = "group3">Group 3</option>
+    </select>
+        <br />
+        <button class ="login" id="editevent_btn">Edit Event</button>
+        <script type="text/javascript" src="editevents.js"></script>
+    
+    <button class ="login" id="delete_btn">Delete</button>
+        <script type="text/javascript" src="deleteevents.js"></script>
+    </div>
+</ul>
+  
+
+<div class="tags" id="tags_div">
+  <label> <input id = "select" name = "tagss" type="radio" value = "meeting" /> Meeting </label><br />
+    <label> <input id = "select2" name = "tagss" type="radio" value = "work" /> Work </label><br />
+    <label> <input id = "select3" name = "tagss" type="radio" value = "home" /> Home </label><br />
+    <label> <input id = "select4" name = "tagss" type="radio" value = "School" /> School </label><br />
+  
+  <script type="text/javascript">
+
+        document.getElementById("select").addEventListener("change", function() {
+        checkTag();
+              $("#table").empty();
+        fetchCal();
+        }, false);
+   
+        document.getElementById("select2").addEventListener("change", function() {
+              
+        checkTag();
+        $("#table").empty();
+        fetchCal();
+        }, false);
+    
+        document.getElementById("select3").addEventListener("change", function() {
+              
+        checkTag();
+        $("#table").empty();
+        fetchCal();
+        }, false);
+    
+        document.getElementById("select4").addEventListener("change", function() {
+              
+        checkTag();
+        $("#table").empty();
+        fetchCal();
+        }, false);
+
+    //Behavior
+    
+        //add
+function meeting() {
+           var tag = "meeting";
+ 
+  // Make a URL-encoded string for passing POST data:
+  var dataString = "tag=" + encodeURIComponent(tag);
+  var xmlHttp = new XMLHttpRequest(); // Initialize our XMLHttpRequest instance
+  xmlHttp.open("POST", "getevents.php", true); // Starting a POST request (NEVER send passwords as GET variables!!!)
+  xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded"); // It's easy to forget this line for POST requests
+  xmlHttp.addEventListener("load", function(event){
+    var jsonData = JSON.parse(event.target.responseText); // parse the JSON into a JavaScript object
+    if(jsonData.success){  // in PHP, this was the "success" key in the associative array; in JavaScript, it's the .success property of jsonData
+      loadEvents();
+      alert("Tag on");
+            afterlogin();
+    }else{
+      alert("Tag not on  "+jsonData.message);
+    }
+    }, false); // Bind the callback to the load event
+  xmlHttp.send(dataString); // Send the data
+}
+        
+        //subtract
+function work() {
+    var tag = "work";
+ 
+  // Make a URL-encoded string for passing POST data:
+  var dataString = "tag=" + encodeURIComponent(tag);
+  var xmlHttp = new XMLHttpRequest(); // Initialize our XMLHttpRequest instance
+  xmlHttp.open("POST", "getevents.php", true); // Starting a POST request (NEVER send passwords as GET variables!!!)
+  xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded"); // It's easy to forget this line for POST requests
+  xmlHttp.addEventListener("load", function(event){
+    var jsonData = JSON.parse(event.target.responseText); // parse the JSON into a JavaScript object
+    if(jsonData.success){  // in PHP, this was the "success" key in the associative array; in JavaScript, it's the .success property of jsonData
+      loadEvents();
+      alert("Tag on");
+            afterlogin();
+    }
+    else{
+      alert("Tag not on  "+jsonData.message);
+    }
+    }, false); // Bind the callback to the load event
+  xmlHttp.send(dataString); // Send the data
+}
+
+        
+        //multiply
+function home() {
+                   var tag = "home";
+ 
+  // Make a URL-encoded string for passing POST data:
+  var dataString = "tag=" + encodeURIComponent(tag);
+  var xmlHttp = new XMLHttpRequest(); // Initialize our XMLHttpRequest instance
+  xmlHttp.open("POST", "getevents.php", true); // Starting a POST request (NEVER send passwords as GET variables!!!)
+  xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded"); // It's easy to forget this line for POST requests
+  xmlHttp.addEventListener("load", function(event){
+    var jsonData = JSON.parse(event.target.responseText); // parse the JSON into a JavaScript object
+    if(jsonData.success){  // in PHP, this was the "success" key in the associative array; in JavaScript, it's the .success property of jsonData
+      loadEvents();
+      alert("Tag on");
+            afterlogin();
+    }else{
+      alert("Tag not on  "+jsonData.message);
+    }
+  }, false); // Bind the callback to the load event
+  xmlHttp.send(dataString); // Send the data
+}
+
+        
+        //divide
+function school() {
+    var tag = "school";
+ 
+  // Make a URL-encoded string for passing POST data:
+  var dataString = "tag=" + encodeURIComponent(tag);
+  var xmlHttp = new XMLHttpRequest(); // Initialize our XMLHttpRequest instance
+  xmlHttp.open("POST", "getevents.php", true); // Starting a POST request (NEVER send passwords as GET variables!!!)
+  xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded"); // It's easy to forget this line for POST requests
+  xmlHttp.addEventListener("load", function(event){
+    var jsonData = JSON.parse(event.target.responseText); // parse the JSON into a JavaScript object
+    if(jsonData.success){  // in PHP, this was the "success" key in the associative array; in JavaScript, it's the .success property of jsonData
+      loadEvents();
+      alert("Tag on");
+            afterlogin();
+    }else{
+      alert("Tag not on  "+jsonData.message);
+    }
+  }, false); // Bind the callback to the load event
+  xmlHttp.send(dataString); // Send the data
+}
+
+    
+        //check which tag
+        
+function checkTag() {
+    var radio_pointers = document.getElementsByName("tagss");
+    var which_tag = null;
+    for (var i=0; i<radio_pointers.length; i++) {
+        if(radio_pointers[i].checked) {
+            which_tag = radio_pointers[i].value;
+        }
+}
+            
+switch (which_tag) {
+        case 'meeting':
+            meeting();
+            break;
+    case 'work':
+            work();
+            break;
+    case 'home':
+            home();
+            break;
+        case 'school':
+            school();
+            }
+        }
+</script>
+</div>-->   
 
 
 <div class="calendar">
@@ -119,10 +402,10 @@ var DAYS_OF_WEEK = 7;    // "constant" for number of days in a week
 var DAYS_OF_MONTH = 31;    // "constant" for number of days in a month
 
 function ajaxCallback(event){
-//CALENDAR DOESNT SHOW UP IF THERE ARE NO EVENTS IN THE DATABASE - fix this
+
   Today.setDate(1); 
   Today.setMonth(currentMonth.month);
-  //console.log(event.target.responseText);  
+  console.log(event.target.responseText);  
   var eventData = JSON.parse(event.target.responseText);
   console.log(eventData[0]);
   var first_sunday = Today.deltaDays(7).getSunday().getDate();
@@ -242,7 +525,7 @@ function ajaxCallback(event){
           a.style.fontSize = "20px";
           a.appendChild(document.createTextNode("" + date + "  "));
           for(var i = 0; i < eventData.length; i++) {
-            if (eventData[i].date === today_string){
+            if (eventData[i].date === today_string && eventData[i].username === username){
               var cal_event = document.createElement('span');
               cal_event.style.width = "100%";
               cal_event.style.height = "70%";

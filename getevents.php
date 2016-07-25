@@ -10,6 +10,10 @@ if(!$stmt){
 	exit;
 }
 
+/*if($_SESSION['token'] !== $_POST['token']){
+	die("Request forgery detected");
+}*/
+
 //$stmt->bind_param('s', $username);
 
 $stmt->execute();
@@ -21,11 +25,11 @@ $events = array();
 
 while($row = $result->fetch_assoc()){
 		$events[] = array(
-			"event_id" => $row['event_id'],
-			"event_name" => $row['event_name'],
-			"username" => $row['username'],
-			"date" => $row['date'], //or whatever we call it in the db
-			"time" => $row['time']
+			"event_id" => htmlentities($row['event_id']),
+			"event_name" => htmlentities($row['event_name']),
+			"username" => htmlentities($row['username']),
+			"date" => htmlentities($row['date']), //or whatever we call it in the db
+			"time" => htmlentities($row['time'])
 		);
 		//$events[] = $event;
 }

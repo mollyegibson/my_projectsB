@@ -1,16 +1,16 @@
 <?php
+session_start();
 require('database.php');
 
 		$event_name = $_POST['eventname'];
 		$date = $_POST['date'];
 		$username = $_POST['username'];//username input
-		$tag = $_POST['tag'];
-		$groups = $_POST['groups'];
+		$id = $_POST['id'];
 		
-session_start();
+
 $_SESSION['username'] = $username;
 
-$mysqli = new mysqli('localhost', 'jilee', 'wnlflzzz', 'module5');
+$mysqli = new mysqli('localhost', 'phpuser', 'password', 'module5');
 
  
 if($mysqli->connect_error) {
@@ -18,20 +18,31 @@ if($mysqli->connect_error) {
 	exit;
 }
 
-if(isset($_POST['submit'])) {
+if (empty($_POST['id'])) {
+		$error = "error: try again";
+        echo $error;
 
-        $stmt = $mysqli->prepare("DELETE FROM Calendar Where id=$id");
-        if(!$stmt){
+            echo json_encode(array(
+        	"success" => false,
+        	"message" => "not successful"
+        ));
+        exit;
+	}
+	else {
+
+	$stmt = $mysqli->prepare("DELETE FROM events Where id=$id");
+	if(!$stmt){
             printf("Query Prep Failed: %s\n", $mysqli->error);
             exit;
         }
+  
+        $stmt->execute();
  
-		$stmt->execute();
-
-		$stmt->close();
+        $stmt->close();
 		
-		echo $id;
-		echo "deleted";
-		}
-
+		echo json_encode(array(
+        	"success" => true
+        ));
+        exit;
+        }
 ?>

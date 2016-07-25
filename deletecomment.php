@@ -1,8 +1,7 @@
 <?php
-require('database.php');
 session_start();
-$username = $_SESSION['username'];
-
+$_SESSION['username'] = $username;
+require('database.php');
  
 $mysqli = new mysqli('localhost', 'jilee', 'wnlflzzz', 'module3');
 
@@ -13,13 +12,14 @@ if($mysqli->connect_error) {
 }
 
 
+
 if(isset($_POST['submit'])) {
 
-		$id = $_POST['event_id'];
-		$comment = $_POST['comment'];
+		$id = $_POST['id'];
+		$comment = $_POST['Comment'];
 		
 
-        $stmt = $mysqli->prepare("DELETE FROM events Where event_id=$id");
+        $stmt = $mysqli->prepare("DELETE FROM Calendar Where id=$id");
         if(!$stmt){
             printf("Query Prep Failed: %s\n", $mysqli->error);
             exit;

@@ -4,7 +4,7 @@ include 'ChromePhp.php';
 
 header("Content-Type: application/json"); // Since we are sending a JSON response here (not an HTML document), set the MIME Type to application/json
  
-$username = $_POST['username'];
+$username = htmlentities($_POST['username']);
  
 // Check to see if the username and password are valid.  (You learned how to do this in Module 3.)
 
