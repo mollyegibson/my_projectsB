@@ -30,6 +30,7 @@ $password = $_POST['password'];
         echo json_encode(array(
         	"success" => true
         ));
+		
         exit;
         }
     
@@ -39,5 +40,7 @@ $password = $_POST['password'];
         	"message" => "Incorrect Username or Password"
         ));
         exit;
-            }
+            }		
+			
+			
 ?>

@@ -10,7 +10,7 @@ if($mysqli->connect_error) {
 }
 
 session_start();
-$_SESSION['user'] = $user_id;
+$_SESSION['username'] = $username;
 
 if(isset($_POST['submit'])) {
 
@@ -18,7 +18,7 @@ if(isset($_POST['submit'])) {
 		$comment = $_POST['Comment'];
 		
 
-        $stmt = $mysqli->prepare("DELETE FROM Comments Where id=$id");
+        $stmt = $mysqli->prepare("DELETE FROM Calendar Where id=$id");
         if(!$stmt){
             printf("Query Prep Failed: %s\n", $mysqli->error);
             exit;
@@ -29,8 +29,6 @@ if(isset($_POST['submit'])) {
 		$stmt->close();
 		
 		echo "delete successful!";
-		
-	    header("Refresh: 20; url=main_after_login.php?id=$user_id");  
-	}
+		}
 
 ?>

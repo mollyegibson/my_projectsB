@@ -11,10 +11,9 @@ function loginAjax(event){
 	xmlHttp.addEventListener("load", function(event){
 		var jsonData = JSON.parse(event.target.responseText); // parse the JSON into a JavaScript object
 		if(jsonData.success){  // in PHP, this was the "success" key in the associative array; in JavaScript, it's the .success property of jsonData
+			loadEvents();
 			alert("You've been Logged In!");
             afterlogin();
-			loadEvents();
-			//addandedit();
 		}else{
 			alert("You were not logged in.  "+jsonData.message);
 		}
@@ -26,7 +25,7 @@ function afterlogin() {
     var username = document.getElementById("username").value;
     var welcome = document.getElementById("welcome");
     $("#mydialog").dialog('close');
-    welcome.textContent = "Welcome " + username; // writes username
+    welcome.textContent = username; // writes username
     document.getElementById("login").value = "Logout";
 	document.getElementById("usernameadd").value = username;
 
@@ -35,15 +34,19 @@ function afterlogin() {
 	
 
 function loadEvents() {
-	var username = document.getElementById("username").value;
-		// Make a URL-encoded string for passing POST data:
-	var dataString = "username=" + encodeURIComponent(username);
- 
-	var xmlHttp = new XMLHttpRequest(); // Initialize our XMLHttpRequest instance
-	xmlHttp.open("POST", "getevents.php", true); // Starting a POST request (NEVER send passwords as GET variables!!!)
-	xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded"); // It's easy to forget this line for POST requests
-	xmlHttp.send(dataString); // Send the data
-}
+	
+		jQuery(function($){
+	var username = $('#username');
+		jQuery.ajax({
+			url: 'getevents.php',
+			type: 'post',
+			data: 'username=' + username.val(),
+			success: function(results){
+				alert(results);
+			}
+		});
+	});
+	}
 
 function logout() {
 	var xmlHttp = new XMLHttpRequest(); // Initialize our XMLHttpRequest instance

@@ -1,6 +1,6 @@
 <?php
 // Content of database.php
- 
+
 $mysqli = new mysqli('localhost', 'jilee', 'wnlflzzz', 'module5');
  
 if($mysqli->connect_error) {

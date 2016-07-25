@@ -6,7 +6,7 @@
 </head>
 
 <body>
-<form method="post" action="editcomment.php">
+<form method="post" action="editevents.php">
 Comment:<input type="text" name="Comment" placeholder="Write Comment" id="Comment" /><br />
 
 	
@@ -15,13 +15,6 @@ Comment:<input type="text" name="Comment" placeholder="Write Comment" id="Commen
     $id = $_GET['name'];
 	echo $id;
 ?>" />
-	
-	<!--<form action="transfer.php" method="post">-->
-<!--<input type="text" name="dest" />-->
-<!--<input type="number" name="amount" />-->
-<!--<input type="hidden" name="token" value="php echo $_SESSION['token'];?>" />-->
-<!--<input type="submit" value="Transfer" />-->
-<!--</form>-->
 	
 <input type="submit" name="submit" value="update" />
 </form>
