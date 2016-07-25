@@ -120,11 +120,13 @@ var DAYS_OF_MONTH = 31;    // "constant" for number of days in a month
 
 function ajaxCallback(event){
 //CALENDAR DOESNT SHOW UP IF THERE ARE NO EVENTS IN THE DATABASE - fix this
-  Today.setMonth(currentMonth.month);
   Today.setDate(1); 
+  Today.setMonth(currentMonth.month);
+  console.log("The month today: " + currentMonth.month);
+  console.log("Today's mONTH: " + Today.getMonth());
+  
   var eventData = JSON.parse(event.target.responseText);
   var first_sunday = Today.deltaDays(7).getSunday().getDate();
-  console.log("First sunday: " +first_sunday);
   var weekday = Today.getDay();
 
   //Create a table DOM 
@@ -152,6 +154,7 @@ function ajaxCallback(event){
   prev.style.borderRight = "15px solid #800000";
   prev.addEventListener("click", previousMonth, false);
   console.log("Current month: " +currentMonth.month);
+  console.log("Today's month: " +Today.getMonth());
   topL.appendChild(prev);
   firstRow.appendChild(topL);
 
@@ -228,7 +231,7 @@ function ajaxCallback(event){
         //  console.log("Date: " +date);
           if (date > first_sunday){
             row_id = Today.getSunday().getDate();
-            console.log("Row id: " + row_id)}
+            console.log("Month " + Today.getMonth());}
 
           var a = document.createElement("TD");
           a.addEventListener("click", alertEvent, false);
@@ -248,7 +251,7 @@ function ajaxCallback(event){
               cal_event.style.fontSize = "15px";
               cal_event.style.backgroundColor = "#AED6F1";
               cal_event.appendChild(document.createTextNode("" + eventData[i].event_name + ""));
-              cal_event.appendChild(document.createTextNode("" + eventData[i].time + ""));
+              cal_event.appendChild(document.createTextNode(" " + eventData[i].time + ""));
               a.appendChild(cal_event);
             }
           }
@@ -261,14 +264,12 @@ function ajaxCallback(event){
 
       if (weekday === 0){
 
-          if (Today.getMonth()+1 > 9){
-            console.log("Testing testing");
+          if (Today.getMonth() > 9){ 
             var today_string = "" + Today.getFullYear() + "-" + parseInt(Today.getMonth()+1) + "-" + Today.getDate();
-            console.log(today_string);}
+            console.log("THEmonth: " +Today.getMonth());}
           else 
             {var today_string = "" + Today.getFullYear() + "-0" + parseInt(Today.getMonth()+1) + "-" + Today.getDate();}
           date = Today.getDate();
-         // console.log("Date: " +date);
           row_id = Today.getSunday().getDate();
           if (row_id != 1){
           var newRow = document.createElement("TR");  
@@ -317,16 +318,20 @@ function upcomingMonth(){
   var myNode = document.getElementById("table");
   while (myNode.firstChild){ myNode.removeChild(myNode.firstChild);}  //Delete the current calendar
   currentMonth = currentMonth.nextMonth();  //Move the current month up one
-  Today.setMonth(currentMonth.nextMonth().month);
+  console.log(currentMonth);
+  if (currentMonth.month == 0){
+    year = parseInt(year + 1);
+  }
   fetchCal();
   }
 
 function previousMonth(){
   var myNode = document.getElementById("table");
   while (myNode.firstChild){ myNode.removeChild(myNode.firstChild);}
+  if (currentMonth.month == 0){
+    year = parseInt(year - 1);
+  }
   currentMonth = currentMonth.prevMonth();
-  Today.setMonth(currentMonth.prevMonth().month);
-  console.log("Prev: " + currentMonth.month);
   fetchCal();
   }
 
