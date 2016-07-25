@@ -22,7 +22,8 @@ while($row = $result->fetch_assoc()){
 			"event_id" => $row['event_id'],
 			"event_name" => $row['event_name'],
 			"username" => $row['username'],
-			"date" => $row['date'] //or whatever we call it in the db
+			"date" => $row['date'], //or whatever we call it in the db
+			"time" => $row['time']
 		);
 		//$events[] = $event;
 }
