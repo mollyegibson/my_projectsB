@@ -17,7 +17,6 @@ $_SESSION['username'] = $username;
 		$date = $_POST['date'];
 		$username = $_POST['username']; //username input
 		$tag = $_POST['tag'];
-		$groups = $_POST['group'];
 		$time = $_POST['time'];
 		$id = $_POST['id']; //username input
 
@@ -30,13 +29,9 @@ $_SESSION['username'] = $username;
         ));
         exit;
 	}
-	else {
-        
-		$id = $_POST['id'];
-		$comment = $_POST['Comment'];
-		
+	else {		
 
-        $stmt = $mysqli->prepare("update Calendar SET event_name='$eventname' Where id=$id");
+        $stmt = $mysqli->prepare("update Calendar SET event_name='$event_name', date='$date', tag='$tag', time='$time' Where id=$id");
 //		date='$date' tag='$tag' group='$group'
         if(!$stmt){
             printf("Query Prep Failed: %s\n", $mysqli->error);

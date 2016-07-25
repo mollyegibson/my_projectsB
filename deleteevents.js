@@ -1,22 +1,23 @@
-function addevent(event){
+function deleteevent(event){
     var username = document.getElementById("usernameadd").value;
-    var eventname = document.getElementById("eventname").value;
-	var date = document.getElementById("date").value;
-    var time = document.getElementById("time").value;
-    var tag = document.getElementById("tags").value;
-    var group = document.getElementById("group").value;
+    var id = document.getElementById("editid").value;
+    var eventname = document.getElementById("editname").value;
+	var date = document.getElementById("editdate").value;
+    var time = document.getElementById("edittime").value;
+    var tag = document.getElementById("edittags").value;
+    var groups = document.getElementById("editgroup").value;
 
 	// Make a URL-encoded string for passing POST data:
-	var dataString = "username=" + encodeURIComponent(username) + "&eventname=" + encodeURIComponent(eventname)+ "&date=" + encodeURIComponent(date)+ "&time=" + encodeURIComponent(time)+ "&tag=" + encodeURIComponent(tag)+ "&group=" + encodeURIComponent(group);
+	var dataString = "username=" + encodeURIComponent(username) + "&id=" + encodeURIComponent(id) + "&eventname=" + encodeURIComponent(eventname)+ "&date=" + encodeURIComponent(date)+ "&time=" + encodeURIComponent(time)+ "&tag=" + encodeURIComponent(tag)+ "&groups=" + encodeURIComponent(groups);
  
 	var xmlHttp = new XMLHttpRequest(); // Initialize our XMLHttpRequest instance
-	xmlHttp.open("POST", "addingevents.php", true); // Starting a POST request (NEVER send passwords as GET variables!!!)
+	xmlHttp.open("POST", "deletingevents.php", true); // Starting a POST request (NEVER send passwords as GET variables!!!)
 	xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded"); // It's easy to forget this line for POST requests
 	xmlHttp.addEventListener("load", function(event){
 		var jsonData = JSON.parse(event.target.responseText); // parse the JSON into a JavaScript object
 		if(jsonData.success){  // in PHP, this was the "success" key in the associative array; in JavaScript, it's the .success property of jsonData
 			alert("Successful!");
-			afteradd();
+			afteredit();
             afterlogin();
 			loadEvents();
 		}else{
@@ -36,8 +37,8 @@ function afterlogin() {
 	document.getElementById("login").onclick = logout;
 	}
 	
-function afteradd() {
-    $("#addeventdialog").dialog('close');
+function afteredit() {
+    $("#editeventdialog").dialog('close');
 	$("#table").empty();
 	fetchCal();
 	}
@@ -60,7 +61,7 @@ function logout() {
 	}
 
 
-var add = document.getElementById("addevent_btn");
+var deleting = document.getElementById("delete_btn");
 document.addEventListener('DOMContentLoaded', function () {
-    add.addEventListener('click', addevent, false);
+    deleting.addEventListener('click', deleteevent, false);
 });  // Bind the AJAX call to button click

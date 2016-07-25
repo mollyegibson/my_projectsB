@@ -11,7 +11,7 @@ $_SESSION['username'] = $username;
     <style>
         #mydialog { display:none }
 		#addeventdialog { display:none }
-        #deleteeventdialog { display:none }
+		#editeventdialog { display:none }
 
     </style>
     
@@ -52,9 +52,9 @@ $_SESSION['username'] = $username;
       $("#addeventdialog").dialog();
     }
 	
-	 function deleteeventdialog()
+	 function editeventdialog()
     {
-      $("#deleteeventdialog").dialog();
+      $("#editeventdialog").dialog();
     }
 	
 	function logout() {
@@ -132,27 +132,243 @@ echo $username;
 		<label for="Time"></label>
 		<input type="time" name="time" id="time" placeholder="Time"/>
         <br />
+		
         <label for="Tag"></label>
-		<input type="text" name="tag" id="tag" placeholder="Tag" />
+		<h4>Tag:*</h4>
+		<select id="tags">
+		<option value = "meeting">Meeting</option>
+		<option value = "work">Work</option>
+		<option value = "home">Home</option>
+		<option value = "school">School</option>
+
+		</select>
+		
         <br />
+		
 		<label for="Group"></label>
-		<input type="text" name="group" id="group" placeholder="Group" />
+		<h4>Group:*</h4>
+		<select id="group">
+		<option value = "group1">Group 1</option>
+		<option value = "group2">Group 2</option>
+		<option value = "group3">Group 3</option>
+		</select>
         <br />
         <button class ="login" id="addevent_btn">Add Event</button>
         <script type="text/javascript" src="addingevents.js"></script>
     </div>
-	</div>
 	
-	<li class =right id="delete" ><input class="delete" type="button" value="Delete event" id="deleteEvent" onclick= "deleteeventdialog();" /></li>
-    <div id = "deleteeventdialog" title="Delete Events">
-    <p>Delete Events</p>	
-            
+	
+	<div id = editingevents>
+    <!--<li class =right id="edit" ><input class="edit" type="button" value="Edit event" id="editEvent" onclick= "editeventdialog();" /></li>-->
+    <div id = "editeventdialog" title="Edit Events">
+    <p>Edit Events</p>	
+        
+		<input type="hidden" name="usernameadd" id="usernameadd" value ="<?php
+require('database.php'); // Includes Database.php
+session_start();
+$username = $_POST['username'];
+$_SESSION['username'] = $username;
+echo $username;
+?>"/>
+		<input type="int" name="id" id="editid" placeholder="Enter event_id"/>
+    
+		<label for="Event name"></label>
+		<input type="text" name="eventname" id="editname" placeholder="Event Name"/>
+        <br />
+        <label for="Date"></label>
+		<input type="date" name="date" id="editdate" placeholder="Date" />
+        <br />
+		<label for="Time"></label>
+		<input type="time" name="time" id="edittime" placeholder="Time"/>
+        <br />
+		
+        <label for="Tag"></label>
+		<h4>Tag:*</h4>
+		<select id="edittags">
+		<option value = "meeting">Meeting</option>
+		<option value = "work">Work</option>
+		<option value = "home">Home</option>
+		<option value = "school">School</option>
 
-        <button class ="login" id="delte_btn">Delete</button>
-        <script type="text/javascript" src="deleteevent.js"></script>
+		</select>
+		
+        <br />
+		
+		<label for="Group"></label>
+		<h4>Group:*</h4>
+		<select id="editgroup">
+		<option value = "group1">Group 1</option>
+		<option value = "group2">Group 2</option>
+		<option value = "group3">Group 3</option>
+		</select>
+        <br />
+        <button class ="login" id="editevent_btn">Edit Event</button>
+        <script type="text/javascript" src="editevents.js"></script>
+		
+		<button class ="login" id="delete_btn">Delete</button>
+        <script type="text/javascript" src="deleteevents.js"></script>
     </div>
 </ul>
 	
+
+<div class="tags" id="tags_div">
+	<label> <input id = "select" name = "tagss" type="radio" value = "meeting" /> Meeting </label><br />
+    <label> <input id = "select2" name = "tagss" type="radio" value = "work" /> Work </label><br />
+    <label> <input id = "select3" name = "tagss" type="radio" value = "home" /> Home </label><br />
+    <label> <input id = "select4" name = "tagss" type="radio" value = "School" /> School </label><br />
+	
+	<script type="text/javascript">
+
+        document.getElementById("select").addEventListener("change", function() {
+				checkTag();
+            	$("#table").empty();
+				fetchCal();
+        }, false);
+   
+        document.getElementById("select2").addEventListener("change", function() {
+            	
+				checkTag();
+				$("#table").empty();
+				fetchCal();
+        }, false);
+    
+        document.getElementById("select3").addEventListener("change", function() {
+            	
+				checkTag();
+				$("#table").empty();
+				fetchCal();
+        }, false);
+    
+        document.getElementById("select4").addEventListener("change", function() {
+            	
+				checkTag();
+				$("#table").empty();
+				fetchCal();
+        }, false);
+
+    //Behavior
+    
+        //add
+function meeting() {
+           var tag = "meeting";
+ 
+	// Make a URL-encoded string for passing POST data:
+	var dataString = "tag=" + encodeURIComponent(tag);
+	var xmlHttp = new XMLHttpRequest(); // Initialize our XMLHttpRequest instance
+	xmlHttp.open("POST", "getevents.php", true); // Starting a POST request (NEVER send passwords as GET variables!!!)
+	xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded"); // It's easy to forget this line for POST requests
+	xmlHttp.addEventListener("load", function(event){
+		var jsonData = JSON.parse(event.target.responseText); // parse the JSON into a JavaScript object
+		if(jsonData.success){  // in PHP, this was the "success" key in the associative array; in JavaScript, it's the .success property of jsonData
+			loadEvents();
+			alert("Tag on");
+            afterlogin();
+		}else{
+			alert("Tag not on  "+jsonData.message);
+		}
+		}, false); // Bind the callback to the load event
+	xmlHttp.send(dataString); // Send the data
+}
+        
+        //subtract
+function work() {
+    var tag = "work";
+ 
+	// Make a URL-encoded string for passing POST data:
+	var dataString = "tag=" + encodeURIComponent(tag);
+	var xmlHttp = new XMLHttpRequest(); // Initialize our XMLHttpRequest instance
+	xmlHttp.open("POST", "getevents.php", true); // Starting a POST request (NEVER send passwords as GET variables!!!)
+	xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded"); // It's easy to forget this line for POST requests
+	xmlHttp.addEventListener("load", function(event){
+		var jsonData = JSON.parse(event.target.responseText); // parse the JSON into a JavaScript object
+		if(jsonData.success){  // in PHP, this was the "success" key in the associative array; in JavaScript, it's the .success property of jsonData
+			loadEvents();
+			alert("Tag on");
+            afterlogin();
+		}
+		else{
+			alert("Tag not on  "+jsonData.message);
+		}
+		}, false); // Bind the callback to the load event
+	xmlHttp.send(dataString); // Send the data
+}
+
+        
+        //multiply
+function home() {
+                   var tag = "home";
+ 
+	// Make a URL-encoded string for passing POST data:
+	var dataString = "tag=" + encodeURIComponent(tag);
+	var xmlHttp = new XMLHttpRequest(); // Initialize our XMLHttpRequest instance
+	xmlHttp.open("POST", "getevents.php", true); // Starting a POST request (NEVER send passwords as GET variables!!!)
+	xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded"); // It's easy to forget this line for POST requests
+	xmlHttp.addEventListener("load", function(event){
+		var jsonData = JSON.parse(event.target.responseText); // parse the JSON into a JavaScript object
+		if(jsonData.success){  // in PHP, this was the "success" key in the associative array; in JavaScript, it's the .success property of jsonData
+			loadEvents();
+			alert("Tag on");
+            afterlogin();
+		}else{
+			alert("Tag not on  "+jsonData.message);
+		}
+	}, false); // Bind the callback to the load event
+	xmlHttp.send(dataString); // Send the data
+}
+
+        
+        //divide
+function school() {
+    var tag = "school";
+ 
+	// Make a URL-encoded string for passing POST data:
+	var dataString = "tag=" + encodeURIComponent(tag);
+	var xmlHttp = new XMLHttpRequest(); // Initialize our XMLHttpRequest instance
+	xmlHttp.open("POST", "getevents.php", true); // Starting a POST request (NEVER send passwords as GET variables!!!)
+	xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded"); // It's easy to forget this line for POST requests
+	xmlHttp.addEventListener("load", function(event){
+		var jsonData = JSON.parse(event.target.responseText); // parse the JSON into a JavaScript object
+		if(jsonData.success){  // in PHP, this was the "success" key in the associative array; in JavaScript, it's the .success property of jsonData
+			loadEvents();
+			alert("Tag on");
+            afterlogin();
+		}else{
+			alert("Tag not on  "+jsonData.message);
+		}
+	}, false); // Bind the callback to the load event
+	xmlHttp.send(dataString); // Send the data
+}
+
+    
+        //check which tag
+        
+function checkTag() {
+    var radio_pointers = document.getElementsByName("tagss");
+    var which_tag = null;
+    for (var i=0; i<radio_pointers.length; i++) {
+        if(radio_pointers[i].checked) {
+            which_tag = radio_pointers[i].value;
+        }
+}
+            
+switch (which_tag) {
+        case 'meeting':
+            meeting();
+            break;
+		case 'work':
+            work();
+            break;
+		case 'home':
+            home();
+            break;
+        case 'school':
+            school();
+            }
+        }
+</script>
+</div>		
+
+
 	
 	
 
@@ -163,31 +379,26 @@ echo $username;
 var day_of_week = new Array('Sun','Mon','Tue','Wed','Thu','Fri','Sat');
 var month_of_year = new Array('January','February','March','April','May','June','July','August','September','October','November','December');
 
+var Today = new Date();
+var year = parseInt(Today.getFullYear());     // Returns year
+var month = parseInt(Today.getMonth());   // Returns month (0-11)
+var today = parseInt(Today.getDate());  // Returns day (1-31)
+var currentMonth = new Month(year, month);
+   // Set today to the first day of the month
 
-//  DECLARE AND INITIALIZE VARIABLES
+var DAYS_OF_WEEK = 7;    // "constant" for number of days in a week
+var DAYS_OF_MONTH = 31;    // "constant" for number of days in a month
 
 function ajaxCallback(event){
-  var Today = new Date();
-  console.log("Today: " + Today.getDate());
-  //console.log(event.target.responseText);
-  var eventData = JSON.parse(event.target.responseText);
-  console.log(eventData[0].event_name);
+//CALENDAR DOESNT SHOW UP IF THERE ARE NO EVENTS IN THE DATABASE - fix this
+  Today.setDate(1); 
+  Today.setMonth(currentMonth.month);
+  console.log("The month today: " + currentMonth.month);
+  console.log("Today's mONTH: " + Today.getMonth());
   
-
+  var eventData = JSON.parse(event.target.responseText);
   var first_sunday = Today.deltaDays(7).getSunday().getDate();
-  console.log("First Sun: " + first_sunday);
-  var year = Today.getFullYear();     // Returns year
-  var month = Today.getMonth();    // Returns month (0-11)
-  var today = Today.getDate();    // Returns day (1-31)
-  // Returns day (0-6)
-  currentMonth = new Month(year, month);
-  Today.setDate(1);    // Set today to the first day of the month
-  Today.setMonth(month);
   var weekday = Today.getDay();
-  console.log("Weekday: " +weekday);
-  var DAYS_OF_WEEK = 7;    // "constant" for number of days in a week
-  var DAYS_OF_MONTH = 31;    // "constant" for number of days in a month
-console.log("Today should be 1: " + Today.getDate());
 
   //Create a table DOM 
   var cal = document.createElement("TABLE");    
@@ -201,15 +412,48 @@ console.log("Today should be 1: " + Today.getDate());
   firstRow.setAttribute("id", "firstrow");
   document.getElementById("cal").appendChild(firstRow);
 
-  var top = document.createElement("TD");
-  top.style.width = "100%";
+  var topL = document.createElement("TD");  //Move backwards one month
+  topL.style.height = "40px";
+  topL.setAttribute("id", "topL");
+  topL.setAttribute("colspan", "1");
+  var prev = document.createElement("p");
+  prev.style.width = "0px";
+  prev.style.height = "0px";
+  prev.style.borderTop = "15px solid white";
+  prev.style.borderLeft = "15px solid white";
+  prev.style.borderBottom = "15px solid white";
+  prev.style.borderRight = "15px solid #800000";
+  prev.addEventListener("click", previousMonth, false);
+  console.log("Current month: " +currentMonth.month);
+  console.log("Today's month: " +Today.getMonth());
+  topL.appendChild(prev);
+  firstRow.appendChild(topL);
+
+  var top = document.createElement("TD"); //Display month and year
   top.style.height = "40px";
   top.style.textAlign = "center";
   top.style.fontSize = "35px";
   top.setAttribute("id", "top");
-  top.setAttribute("colspan", "7"); 
-  top.appendChild(document.createTextNode("" +month_of_year[month]+ " " +year+ ""));
+  top.setAttribute("colspan", "5"); 
+  top.appendChild(document.createTextNode("" +month_of_year[currentMonth.month]+ " " +year+ ""));
+  console.log("the month " + month_of_year[currentMonth.month]);
   document.getElementById("firstrow").appendChild(top);
+
+  var topR = document.createElement("TD");  //Move forwards one month
+  topR.style.height = "40px";
+  topR.setAttribute("id", "topL");
+  topR.setAttribute("colspan", "1");
+  var next = document.createElement("p");
+  next.style.width = "0px";
+  next.style.position = "relative";
+  next.style.left = "50px";
+  next.style.borderTop = "15px solid white";
+  next.style.borderLeft = "15px solid #800000";
+  next.style.borderBottom = "15px solid white";
+  next.style.borderRight = "15px solid white";
+  next.addEventListener("click", upcomingMonth, false);
+  topR.appendChild(next);
+  firstRow.appendChild(topR);
 
   var secondRow = document.createElement("TR");
   secondRow.style.height = "70px";
@@ -230,8 +474,7 @@ console.log("Today should be 1: " + Today.getDate());
 
   var rowThree = document.createElement("TR");
   rowThree.style.height = "100px";
-  //rowThree.style.border = "medium solid #0000FF";
-  rowThree.setAttribute("id", "0");
+  rowThree.setAttribute("id", "1");
   document.getElementById("cal").appendChild(rowThree);
 
   for(index=0; index < Today.getDay(); index++){  //Fill in blank days until we get to today
@@ -240,64 +483,75 @@ console.log("Today should be 1: " + Today.getDate());
     y.style.width = "174px"; 
     y.style.borderRight = "medium solid #0000FF";
     y.appendChild(document.createTextNode(" "));
-    document.getElementById("0").appendChild(y);
+    document.getElementById("1").appendChild(y);
   }
 
-  for(index=0; index < DAYS_OF_MONTH; index++){
-    //var week_day = Today.getDay();
+  for(index=0; index < 5; index++){ //six iterations bc that's the max number of weeks that a month can span
 
-       if (Today.getDate() > index){
 
-		console.log("Today should still be 1: " + Today.getDate());
-        var row_id = "0";
-      
-console.log("WeeeeeeeKDAY: " +weekday);
-
-while (weekday !== 0){
-          var today_string = "" + Today.getFullYear() + "-0" + parseInt(Today.getMonth()+1) + "-" + Today.getDate();
-          console.log(today_string);
+    if (Today.getDate() > index){
+        var row_id = "1";
+        
+        while (weekday!=0){
+        //  console.log("Day: " +weekday);
+          if (Today.getMonth()+1 > 9){
+            var today_string = "" + Today.getFullYear() + "-" + parseInt(Today.getMonth()+1) + "-" + Today.getDate();} 
+          else {
+            var today_string = "" + Today.getFullYear() + "-0" + parseInt(Today.getMonth()+1) + "-" + Today.getDate();}
           date = Today.getDate();
-		  console.log("Date: " + date);
-          if (date > 3){
+        //  console.log("Date: " +date);
+          if (date > first_sunday){
             row_id = Today.getSunday().getDate();
-          }
+            console.log("Month " + Today.getMonth());}
+
           var a = document.createElement("TD");
+		  a.id = cal;
           a.style.borderBottom = "medium solid #0000FF";
           a.style.borderRight = "medium solid #0000FF";
           a.style.textAlign = "right";
           a.style.width = "174px";
-		  a.addEventListener("click", alertEvent, false);
           a.style.verticalAlign = "top";
           a.style.fontSize = "20px";
           a.appendChild(document.createTextNode("" + date + "  "));
-		for(var i = 0; i < eventData.length; i++) {
-          if (eventData[i].date === today_string){
-            var cal_event = document.createElement('span');
-            cal_event.style.width = "100%";
-            cal_event.style.height = "50%";
-            cal_event.style.display = "block";
-            cal_event.style.fontSize = "15px";
-            cal_event.style.backgroundColor = "#AED6F1";
-            cal_event.appendChild(document.createTextNode("" + eventData[i].event_name + ""));
-            a.appendChild(cal_event);
+          for(var i = 0; i < eventData.length; i++) {
+            if (eventData[i].date === today_string){
+              var cal_event = document.createElement('span');
+              cal_event.style.width = "100%";
+              cal_event.style.height = "70%";
+              cal_event.style.display = "block";
+              cal_event.style.fontSize = "15px";
+              cal_event.style.backgroundColor = "#AED6F1";
+			  cal_event.appendChild(document.createTextNode("" + eventData[i].id + ":"));
+              cal_event.appendChild(document.createTextNode("" + eventData[i].event_name + ""));
+              cal_event.appendChild(document.createTextNode(" " + eventData[i].time + ""));
+			  cal_event.addEventListener("click", alertEvent, false);
+              a.appendChild(cal_event);
+            }
           }
-		}
           document.getElementById(row_id.toString()).appendChild(a);
           Today.setDate(Today.getDate()+1);
+          if (Today.getDate() === 1){break;}
           weekday = Today.getDay();
-	  }
-	  
-if (weekday === 0){
-          var today_string = "" + Today.getFullYear() + "-0" + parseInt(Today.getMonth()+1) + "-" + Today.getDate();
-          row_id = Today.getSunday().getDate();
+          
+        }
+
+      if (weekday === 0){
+
+          if (Today.getMonth() > 9){ 
+            var today_string = "" + Today.getFullYear() + "-" + parseInt(Today.getMonth()+1) + "-" + Today.getDate();
+            console.log("THEmonth: " +Today.getMonth());}
+          else 
+            {var today_string = "" + Today.getFullYear() + "-0" + parseInt(Today.getMonth()+1) + "-" + Today.getDate();}
           date = Today.getDate();
-          var newRow = document.createElement("TR");  //create new row if it's sunday
+          row_id = Today.getSunday().getDate();
+          if (row_id != 1){
+          var newRow = document.createElement("TR");  
           newRow.style.height = "100px";
           newRow.setAttribute("id",row_id.toString());
           document.getElementById("cal").appendChild(newRow);
-          
-		  var b = document.createElement("TD");
-          b.addEventListener("click", alertEvent, false);
+          }
+          var b = document.createElement("TD");
+		  b.id = cal;
           b.style.borderRight = "medium solid #0000FF";
           b.style.borderBottom = "medium solid #0000FF";
           b.style.fontSize = "20px";
@@ -305,20 +559,26 @@ if (weekday === 0){
           b.style.textAlign = "right";
           b.style.verticalAlign = "top";
           b.appendChild(document.createTextNode("" + date + ""));
-         
-		  for(var i = 0; i < eventData.length; i++) {
+          for(var i = 0; i < eventData.length; i++) {
             if (eventData[i].date === today_string){
               var cal_event = document.createElement('span');
               cal_event.style.width = "100%";
               cal_event.style.height = "50%";
               cal_event.style.fontSize = "15px";
+			  cal_event.appendChild(document.createTextNode("" + eventData[i].id + ":"));
               cal_event.appendChild(document.createTextNode("" + eventData[i].event_name + ""));
+              cal_event.appendChild(document.createTextNode(" " + eventData[i].time + ""))
+			cal_event.addEventListener("click", alertEvent, false);
               b.appendChild(cal_event);
             }
           }
-          newRow.appendChild(b);
+          if (date != 1){
+          newRow.appendChild(b);}
+          else{
+            document.getElementById("1").appendChild(b);}
           Today.setDate(Today.getDate()+1);
           weekday = Today.getDay();
+          if (Today.getDate() === 1){break;}
         }
 
 
@@ -329,10 +589,28 @@ if (weekday === 0){
 
 }
 
-
-  function alertEvent(){
-    alert("yo!");
+function upcomingMonth(){
+  var myNode = document.getElementById("table");
+  while (myNode.firstChild){ myNode.removeChild(myNode.firstChild);}  //Delete the current calendar
+  currentMonth = currentMonth.nextMonth();  //Move the current month up one
+  console.log(currentMonth);
+  if (currentMonth.month == 0){
+    year = parseInt(year + 1);
   }
+  fetchCal();
+  }
+
+function previousMonth(){
+  var myNode = document.getElementById("table");
+  while (myNode.firstChild){ myNode.removeChild(myNode.firstChild);}
+  if (currentMonth.month == 0){
+    year = parseInt(year - 1);
+  }
+  currentMonth = currentMonth.prevMonth();
+  fetchCal();
+  }
+
+
 
 (function(){
   Date.prototype.deltaDays=function(c){  //returns a Date object c days in the future
@@ -344,6 +622,32 @@ if (weekday === 0){
   };
 })();
 
+
+ /* function updateCalendar(){
+    var Today = new Date();
+    Today.setMonth(Today.getMonth()+1);
+    console.log("New month: " + Today.setMonth(Today.getMonth()+1));
+    var myNode = document.getElementById("cal");
+    while (myNode.firstChild){
+      myNode.removeChild(myNode.firstChild);
+    }
+    fetchCal(Today);
+  }*/
+ 
+  function alertEvent(){
+
+	//var str = $('#cal span').text();
+	//	alert(str);
+	//
+	//var myRe = /.+?(?=:)/g;
+	//var myArray = myRe.exec(str);
+	//
+	//alert(myArray);
+	//document.getElementById("editid").val = myArray;
+
+    editeventdialog();
+  }
+  
   
   function Week(c){  //
     this.sunday=c.getSunday();
@@ -383,9 +687,11 @@ if (weekday === 0){
     };
   }
 
+//var Today = new Date();
 document.addEventListener("DOMContentLoaded", fetchCal, false);
 </script>
 </div>
+
 
 
 </body>
