@@ -1,4 +1,7 @@
+//deletes event
 function deleteevent(event){
+    
+    //gets values from the form
     var username = document.getElementById("usernameadd").value;
     var id = document.getElementById("editid").value;
     var eventname = document.getElementById("editname").value;

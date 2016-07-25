@@ -1,22 +1,24 @@
 <?php
-require('database.php'); // Includes Database.php
+require('database.php');
 session_start();
 $username = $_POST['username'];
 $_SESSION['username'] = $username;
+ini_set("session.cookie_httponly", 1); 
 ?>
 
 <!DOCTYPE HTML>
-<html>
+<html lang=en>
 <head>
     <style>
         #mydialog { display:none }
+		#sharedialog { display:none }
 		#addeventdialog { display:none }
 		#editeventdialog { display:none }
-
     </style>
     
     <title> Calendar </title>
     
+<!--	javascript and css files    -->
     <link rel="stylesheet" type="text/css" href="calendar.css" />
     
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js" type="text/javascript"></script>
@@ -35,6 +37,7 @@ $_SESSION['username'] = $username;
 
 	var myDoc = document;
 	
+	//javascript functions
 	function fetchCal(){
 		var xmlHttp = new XMLHttpRequest();
 		xmlHttp.open("POST", "getevents.php", true);  //figure out how to pass 'username' into the getevents.php url (getevents.php?username='')
@@ -42,6 +45,7 @@ $_SESSION['username'] = $username;
 		xmlHttp.send(null);
 	}
 	
+	//showing dialogs
     function showdialog()
     {
       $("#mydialog").dialog();
@@ -55,6 +59,11 @@ $_SESSION['username'] = $username;
 	 function editeventdialog()
     {
       $("#editeventdialog").dialog();
+    }
+	
+	function sharedialog()
+    {
+      $("#sharedialog").dialog();
     }
 	
 	function logout() {
@@ -82,6 +91,7 @@ $_SESSION['username'] = $username;
         <label for="password"></label>
 		<input type="password" name="password" id="password" placeholder="Password" />
         <br />
+		<input type="hidden" name="token" value="<?php echo $_SESSION['token'];?>" />
         <button class ="login" id="login_btn">Sign In</button>
         <script type="text/javascript" src="login.js"></script>
     <br />
@@ -99,11 +109,32 @@ $_SESSION['username'] = $username;
         <label for="password"></label>
 		<input type="password" name="password" id="password_signup" placeholder="Password"/>
         <br />
-
+		<input type="hidden" name="token" value="<?php echo $_SESSION['token'];?>" />
+<!--		hidden token      -->
         <button class ="login" id="signup_btn">Sign Up</button>
         <script type="text/javascript" src="signup.js"></script>
     </div>
+	
+	<li class =right id="loginbutton" ><input class="share" type="button" value="Share" id="share" onclick= "sharedialog();" /></li>
+    <div id = "sharedialog" title="Sign In / Sign Up">
+    <p>Share</p>	
+            
+		<input type="hidden" name="usernameadd" id="usernameadd" value ="<?php
+			require('database.php'); // Includes Database.php
+			session_start();
+			$username = $_POST['username'];
+			$_SESSION['username'] = $username;
+			echo $username;
+			?>"/>
+		
+		<label for="username"></label>
+		<input type="text" name="email" id="email" placeholder="Username for sharing your calendar"/>
+        <br />
 
+        <button class ="login" id="share_btn">Share</button>
+        <script type="text/javascript" src="share.js"></script>
+    <br />
+	
     </ul>
         <div id = "welcome" class= "welcome"></div>
 
@@ -116,13 +147,14 @@ $_SESSION['username'] = $username;
     <p>Add Events</p>	
         
 		<input type="hidden" name="usernameadd" id="usernameadd" value ="<?php
-require('database.php'); // Includes Database.php
-session_start();
-$username = $_POST['username'];
-$_SESSION['username'] = $username;
-echo $username;
-?>"/>
+			require('database.php'); // Includes Database.php
+			session_start();
+			$username = $_POST['username'];
+			$_SESSION['username'] = $username;
+			echo $username;
+			?>"/>
     
+		<input type="hidden" name="token" value="<?php echo $_SESSION['token'];?>" />
 		<label for="Event name"></label>
 		<input type="text" name="eventname" id="eventname" placeholder="Event Name"/>
         <br />
@@ -164,12 +196,13 @@ echo $username;
     <p>Edit Events</p>	
         
 		<input type="hidden" name="usernameadd" id="usernameadd" value ="<?php
-require('database.php'); // Includes Database.php
-session_start();
-$username = $_POST['username'];
-$_SESSION['username'] = $username;
-echo $username;
-?>"/>
+			require('database.php'); // Includes Database.php
+			session_start();
+			$username = $_POST['username'];
+			$_SESSION['username'] = $username;
+			echo $username;
+			?>"/>
+		<input type="hidden" name="token" value="<?php echo $_SESSION['token'];?>" />
 		<input type="int" name="id" id="editid" placeholder="Enter event_id"/>
     
 		<label for="Event name"></label>

@@ -1,4 +1,6 @@
+//edits event
 function editevent(event){
+    //gets values from the form
     var username = document.getElementById("usernameadd").value;
     var id = document.getElementById("editid").value;
     var eventname = document.getElementById("editname").value;
@@ -27,6 +29,7 @@ function editevent(event){
 	xmlHttp.send(dataString); // Send the data
 }
 
+//loads username after login
 function afterlogin() {
     var username = document.getElementById("username").value;
     var welcome = document.getElementById("welcome");
@@ -37,6 +40,7 @@ function afterlogin() {
 	document.getElementById("login").onclick = logout;
 	}
 	
+//reloads the calendar after editing    
 function afteredit() {
     $("#editeventdialog").dialog('close');
 	$("#table").empty();

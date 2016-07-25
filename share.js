@@ -1,6 +1,8 @@
-function loginAjax(event){
-	var username = document.getElementById("username").value; // Get the username from the form
-	var password = document.getElementById("password").value; // Get the password from the form
+//shares the calendar
+function sharecalendar(event){
+	var username = document.getElementById("usernameadd").value; // Get the username from the form
+	var email = document.getElementById("email").value; // Get the email from the form
+ 
  
 	// Make a URL-encoded string for passing POST data:
 	var dataString = "username=" + encodeURIComponent(username) + "&password=" + encodeURIComponent(password);
@@ -19,9 +21,10 @@ function loginAjax(event){
 		}
 	}, false); // Bind the callback to the load event
 	xmlHttp.send(dataString); // Send the data
+	
 }
 
-//loads the username after login
+//loads welcome someone after login 
 function afterlogin() {
     var username = document.getElementById("username").value;
     var welcome = document.getElementById("welcome");
@@ -33,20 +36,7 @@ function afterlogin() {
 	document.getElementById("login").onclick = logout;
 	}
 	
-//function loadEvents() {
-//	var username = document.getElementById("username").value; // Get the username from the form
-// console.log(username);
-//	// Make a URL-encoded string for passing POST data:
-//	var dataString = "username=" + encodeURIComponent(username);
-// 
-//	var xmlHttp = new XMLHttpRequest(); // Initialize our XMLHttpRequest instance
-//	xmlHttp.open("POST", "getevents.php", true); // Starting a POST request (NEVER send passwords as GET variables!!!)
-//	xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded"); // It's easy to forget this line for POST requests
-//	xmlHttp.addEventListener("load", ajaxCallback(event), false); // Bind the callback to the load event
-//	xmlHttp.send(dataString); // Send the data
-//}
-
-//loads events
+//loading event
 function loadEvents() {
 	
 		jQuery(function($){
@@ -61,25 +51,24 @@ function loadEvents() {
 		});
 	});
 	}
-	
-	//log out
+
+//logout
 function logout() {
 	var xmlHttp = new XMLHttpRequest(); // Initialize our XMLHttpRequest instance
 	xmlHttp.open("POST", "logout.php", true); // Starting a POST request (NEVER send passwords as GET variables!!!)
 	window.location.reload();
 	}
 
-
-//when button is clicked, perform the action
-var login = document.getElementById("login_btn");
+//when button is clicked or enter key is pressed, perform the action
+var share = document.getElementById("share_btn");
 document.addEventListener('DOMContentLoaded', function () {
-    login.addEventListener('click', loginAjax, false);
+    share.addEventListener('click', sharecalendar, false);
 });  // Bind the AJAX call to button click
 
-document.getElementById("password")
+document.getElementById("email")
     .addEventListener("keyup", function(event) {
     event.preventDefault();
     if (event.keyCode == 13) {
-        document.getElementById("login_btn").click();
+        document.getElementById("share_btn").click();
     }
 });

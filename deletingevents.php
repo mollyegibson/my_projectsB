@@ -1,6 +1,10 @@
 <?php
+
+ini_set("session.cookie_httponly", 1);
+
 require('database.php');
 
+//gets Post data
 		$event_name = $_POST['eventname'];
 		$date = $_POST['date'];
 		$username = $_POST['username'];//username input
@@ -8,8 +12,21 @@ require('database.php');
 		$groups = $_POST['groups'];
 		$id = $_POST['id'];
 		
-session_start();
+session_start(); //starting session
+
+//checking if the username is valid
 $_SESSION['username'] = $username;
+if( !preg_match('/^[\w_\-]+$/', $username) ){
+	echo "Invalid username";
+	exit;
+}
+
+//csrf token
+
+$_SESSION['token'] = substr(md5(rand()), 0, 10); // generate a 10-character random string
+if($_SESSION['token'] !== $_POST['token']){
+	die("Request forgery detected");
+}
 
 $mysqli = new mysqli('localhost', 'jilee', 'wnlflzzz', 'module5');
 

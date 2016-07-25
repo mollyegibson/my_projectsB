@@ -1,3 +1,5 @@
+//signing up
+
 function signupAjax(event){
 	var name = document.getElementById("name").value; // Get the name from the form
 	var username_signup = document.getElementById("username_signup").value; // Get the username from the form
@@ -21,13 +23,13 @@ function signupAjax(event){
 }
 
 var signup = document.getElementById("signup_btn");
-document.addEventListener('DOMContentLoaded', function () {
+	document.addEventListener('DOMContentLoaded', function () {
     signup.addEventListener('click', signupAjax, false);
-});  // Bind the AJAX call to button click
+	});  // Bind the AJAX call to button click
 	
 document.getElementById("password_signup").addEventListener("keyup", function(event) {
     event.preventDefault();
     if (event.keyCode == 13) {
         document.getElementById("signup_btn").click();
     }
-});
+	});

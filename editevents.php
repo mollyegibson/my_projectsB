@@ -1,5 +1,9 @@
 <?php
+
+ini_set("session.cookie_httponly", 1); //cookie
+
 require('database.php');
+ 
  
 $mysqli = new mysqli('localhost', 'jilee', 'wnlflzzz', 'module5');
 
@@ -9,8 +13,18 @@ if($mysqli->connect_error) {
 	exit;
 }
 
+$_SESSION['token'] = substr(md5(rand()), 0, 10); // generate a 10-character random string
+if($_SESSION['token'] !== $_POST['token']){
+	die("Request forgery detected");
+}
+
+//starting session and does sql safe thingy
 session_start();
 $_SESSION['username'] = $username;
+if( !preg_match('/^[\w_\-]+$/', $username) ){
+	echo "Invalid username";
+	exit;
+}
 
 		$error='';
 		$event_name = $_POST['eventname'];

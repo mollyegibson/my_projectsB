@@ -1,10 +1,24 @@
 <?php
-require('database.php');
+
+ini_set("session.cookie_httponly", 1); // cookie http-only
+
+require('database.php'); 
 
 header("Content-Type: application/json"); // Since we are sending a JSON response here (not an HTML document), set the MIME Type to application/json
  
+ //does sql injection protection
 $username = $_POST['username'];
+if( !preg_match('/^[\w_\-]+$/', $user_id) ){
+	echo "Invalid username";
+	exit;
+}
 $password = $_POST['password'];
+ 
+ //crsf token
+ $_SESSION['token'] = substr(md5(rand()), 0, 10); // generate a 10-character random string
+if($_SESSION['token'] !== $_POST['token']){
+	die("Request forgery detected");
+}
  
 // Check to see if the username and password are valid.  (You learned how to do this in Module 3.)
 

@@ -1,4 +1,6 @@
+//adds event 
 function addevent(event){
+    //getting values from the form
     var username = document.getElementById("usernameadd").value;
     var eventname = document.getElementById("eventname").value;
 	var date = document.getElementById("date").value;
@@ -26,6 +28,7 @@ function addevent(event){
 	xmlHttp.send(dataString); // Send the data
 }
 
+//loads welcome username and logout
 function afterlogin() {
     var username = document.getElementById("username").value;
     var welcome = document.getElementById("welcome");
@@ -35,7 +38,8 @@ function afterlogin() {
     document.getElementById("login").value = "Logout";
 	document.getElementById("login").onclick = logout;
 	}
-	
+
+//reloads the calendar after adding	
 function afteradd() {
     $("#addeventdialog").dialog('close');
 	$("#table").empty();
